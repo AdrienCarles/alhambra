@@ -4,6 +4,11 @@ controllers:
         namespace: App\Controller
     type: attribute
 
+groupe_new:
+    path: /group/new
+    controller: App\Controller\CommissionController::new
+    methods:  [GET,POST]
+
 user_new:
     path:     /user/new
     controller: App\Controller\UserController::new
