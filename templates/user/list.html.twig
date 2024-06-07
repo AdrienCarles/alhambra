@@ -1,0 +1,13 @@
+{% extends 'card.html.twig' %}
+
+{% block title %}User List{% endblock %}
+
+{% block card_content %}
+    <ul class="list-group">
+        {% for user in users %}
+            <li class="list-group-item">{{ user.name }} ({{ user.email }})</li>
+        {% else %}
+            <li class="list-group-item">No users found</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

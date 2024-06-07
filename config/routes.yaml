@@ -9,6 +9,21 @@ user_new:
     controller: App\Controller\UserController::new
     methods:  [GET,POST]
 
+user_list:
+    path:     /user/list
+    controller: App\Controller\UserController::list
+    methods:  [GET]
+
+user_detail:
+    path: /user/{id}
+    controller: App\Controller\UserController::detail
+    methods: [GET]
+
+user_delete:
+    path: /user/{id}/delete
+    controller: App\Controller\UserController::delete
+    methods: [POST]
+
 user_success:
     path:     /user/success
     controller: App\Controller\UserController::success

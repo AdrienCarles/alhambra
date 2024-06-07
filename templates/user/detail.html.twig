@@ -1,0 +1,15 @@
+{% extends 'card.html.twig' %}
+
+{% block title %}User Detail{% endblock %}
+
+{% block card_content %}
+    <h1>{{ user.name }}</h1>
+    <p class="mb-0"><strong>Email:</strong> {{ user.email }}</p>
+    <p class="mb-0"><strong>Nom:</strong> {{ user.name }}</p>
+
+    <form action="{{ path('user_delete', {'id': user.id}) }}" method="post">
+        <input type="hidden" name="_method" value="DELETE">
+        <input type="submit" value="Delete" class="btn btn-danger mt-3">
+    </form>
+    
+{% endblock %}
