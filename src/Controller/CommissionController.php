@@ -28,7 +28,7 @@ class CommissionController extends AbstractController
             $this->entityManager->flush();
             return $this->redirectToRoute('user_success');
         }
-        return $this->render('group/new.html.twig', [
+        return $this->render('commission/new.html.twig', [
             'commission' => $commission,
             'form' => $form->createView(),
         ]);

@@ -1,43 +1,36 @@
 <?php
-// src/Entity/User.php
+
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\GeneratedValue;
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\OneToMany;
-use Symfony\Component\Security\Core\User\UserInterface;
+use App\Repository\UserRepository;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-#[Entity(repositoryClass: "App\Repository\UserRepository")]
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[Id, GeneratedValue, Column(type: "integer")]
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: "integer")]
+    private ?int $id = null;
 
-    #[Column(type: "string", length: 180, unique: true)]
-    private $email;
+    #[ORM\Column(type: "string", length: 180, unique: true)]
+    private ?string $email = null;
 
-    #[Column(type: "string")]
-    private $password;
+    #[ORM\Column(type: "string")]
+    private ?string $password = null;
 
-    #[Column(type: "string", length: 255)]
-    private $name;
+    #[ORM\Column(type: "string", length: 255)]
+    private ?string $name = null;
 
-    #[OneToMany(targetEntity: "App\Entity\Post", mappedBy: "user")]
-    private $posts;
-
-    #[OneToMany(targetEntity: "App\Entity\Notification", mappedBy: "user")]
-    private $notifications;
-
-    public function __construct()
-    {
-        $this->posts = new ArrayCollection();
-        $this->notifications = new ArrayCollection();
-    }
+    /**
+     * @var list<string> The user roles
+     */
+    #[ORM\Column(type: "json")]
+    private array $roles = [];
 
     public function getId(): ?int
     {
@@ -56,7 +49,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getPassword(): ?string
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -81,81 +74,45 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection|Post[]
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
      */
-    public function getPosts(): Collection
+    public function getUserIdentifier(): string
     {
-        return $this->posts;
+        return (string) $this->email;
     }
 
-    public function addPost(Post $post): self
+    /**
+     * @see UserInterface
+     *
+     * @return list<string>
+     */
+    public function getRoles(): array
     {
-        if (!$this->posts->contains($post)) {
-            $this->posts[] = $post;
-            $post->setUser($this);
-        }
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
 
-        return $this;
+        return array_unique($roles);
     }
 
-    public function removePost(Post $post): self
+    /**
+     * @param list<string> $roles
+     */
+    public function setRoles(array $roles): self
     {
-        if ($this->posts->removeElement($post)) {
-            // set the owning side to null (unless already changed)
-            if ($post->getUser() === $this) {
-                $post->setUser(null);
-            }
-        }
+        $this->roles = $roles;
 
         return $this;
     }
 
     /**
-     * @return Collection|Notification[]
+     * @see UserInterface
      */
-    public function getNotifications(): Collection
-    {
-        return $this->notifications;
-    }
-
-    public function addNotification(Notification $notification): self
-    {
-        if (!$this->notifications->contains($notification)) {
-            $this->notifications[] = $notification;
-            $notification->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeNotification(Notification $notification): self
-    {
-        if ($this->notifications->removeElement($notification)) {
-            // set the owning side to null (unless already changed)
-            if ($notification->getUser() === $this) {
-                $notification->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getRoles(): array
-    {
-        return ['ROLE_USER'];
-    }
-
-    public function getSalt(): ?string
-    {
-        return null;
-    }
-
     public function eraseCredentials(): void
     {
-        // Clear any temporary sensitive data
-    }
-    public function getUserIdentifier(): string
-    {
-        return $this->email;
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 }

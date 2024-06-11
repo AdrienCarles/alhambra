@@ -4,18 +4,28 @@ controllers:
         namespace: App\Controller
     type: attribute
 
-groupe_new:
-    path: /group/new
-    controller: App\Controller\CommissionController::new
-    methods:  [GET,POST]
+# Route HomeController
+app_home:
+    path: /home
+    controller: App\Controller\HomeController::index
 
-user_new:
-    path:     /user/new
-    controller: App\Controller\UserController::new
-    methods:  [GET,POST]
+# Route SecurityController
+app_login:
+    path: /login
+    controller: App\Controller\SecurityController::login
 
+app_logout:
+    path: /logout
+    controller: App\Controller\SecurityController::logout
+
+# Route RegistrationController
+app_register:
+    path: /register
+    controller: App\Controller\RegistrationController::register
+
+# Route UserController
 user_list:
-    path:     /user/list
+    path: /user/list
     controller: App\Controller\UserController::list
     methods:  [GET]
 
@@ -29,7 +39,8 @@ user_delete:
     controller: App\Controller\UserController::delete
     methods: [POST]
 
-user_success:
-    path:     /user/success
-    controller: App\Controller\UserController::success
-    methods:  [GET]
+# Route CommissionController
+commission_new:
+    path: /commission/new
+    controller: App\Controller\CommissionController::new
+    methods:  [GET,POST]

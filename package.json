@@ -26,7 +26,6 @@
     "dependencies": {
         "autoprefixer": "^10.4.19",
         "bootstrap": "^5.3.3",
-        "postcss-loader": "^7.0.0",
         "node-sass": "^9.0.0"
     }
 }

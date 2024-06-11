@@ -3,9 +3,16 @@
 {% block title %}User List{% endblock %}
 
 {% block card_content %}
+    <div class="d-flex justify-content-end">
+        <a href="{{ path('app_register') }}" class="btn btn-secondary mb-3">+</a>
+    </div>
     <ul class="list-group">
         {% for user in users %}
-            <li class="list-group-item">{{ user.name }} ({{ user.email }})</li>
+            <li class="list-group-item">
+                <a href="{{ path('user_detail', {'id': user.id}) }}" class="text-decoration-none text-dark">
+                    {{ user.name }} ({{ user.email }})
+                </a>
+            </li>
         {% else %}
             <li class="list-group-item">No users found</li>
         {% endfor %}
