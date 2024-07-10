@@ -44,3 +44,12 @@ commission_new:
     path: /commission/new
     controller: App\Controller\CommissionController::new
     methods:  [GET,POST]
+
+# Test-bryan layout
+index:
+    path: /
+    controller: App\Controller\ChatController::index
+
+chat:
+    path: /chat/{id}
+    controller: App\Controller\ChatController::chat
