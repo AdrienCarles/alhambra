@@ -4,6 +4,13 @@ controllers:
         namespace: App\Controller
     type: attribute
 
+index:
+    path: /
+    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction
+    defaults:
+        path: /login
+        permanent: true
+
 # Route HomeController
 app_home:
     path: /home
@@ -33,6 +40,11 @@ user_detail:
     path: /user/{id}
     controller: App\Controller\UserController::detail
     methods: [GET]
+
+user_edit:
+    path: /user/edit/{id}
+    controller: App\Controller\UserController::edit
+    methods: [GET, POST]
 
 user_delete:
     path: /user/{id}/delete

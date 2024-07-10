@@ -6,46 +6,50 @@
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
-
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Whatsapp</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/home">Home</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <button class="btn dropdown-toggle" id="navbarDropdown" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Utilisateurs
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="/user/new">Nouveau</a>
-                        <a class="dropdown-item" href="/user/list">Liste</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <button class="btn dropdown-toggle" id="navbarDropdown" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Groupes
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="/commission/new">Nouveau</a>
-                        <a class="dropdown-item" href="/commission/list">Liste</a>
-                    </div>
-                </li>
-                <li class="nav-item ml-auto">
-                    <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
-                </li>
-            </ul>
-        </div>
-        </nav>
+        
+        {% if app.user %}
+            {% block javascripts %}
+                {{ encore_entry_script_tags('app') }}
+                {% block importmap %}{{ importmap('app') }}{% endblock %}
+            {% endblock %}
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">Whatsapp</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+    
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/home">Accueil</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <button class="btn dropdown-toggle" id="navbarDropdown" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Utilisateurs
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            {% if is_granted('ROLE_ADMINISTRATEUR') %}
+                                <a class="dropdown-item" href="/user/list">Liste</a>
+                            {% endif %}
+                            <a class="dropdown-item" href="{{ path('user_detail', {'id': app.user.id}) }}">Mon Compte</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <button class="btn dropdown-toggle" id="navbarDropdown" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Groupes
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/commission/new">Nouveau</a>
+                            <a class="dropdown-item" href="/commission/list">Liste</a>
+                        </div>
+                    </li>
+                    <li class="nav-item ml-auto">
+                        <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+                    </li>
+                </ul>
+            </div>
+            </nav>
+        {% endif %}
     </head>
     <body>
         {% block body %}

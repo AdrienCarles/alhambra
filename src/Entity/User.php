@@ -30,7 +30,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var list<string> The user roles
      */
     #[ORM\Column(type: "json")]
-    private array $roles = [];
+    private array $roles = ['ROLE_USER'];
 
     public function getId(): ?int
     {
@@ -93,7 +93,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
-
         return array_unique($roles);
     }
 
@@ -102,7 +101,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function setRoles(array $roles): self
     {
-        $this->roles = $roles;
+        $validRoles = ['ROLE_USER', 'ROLE_ADMINISTRATEUR', 'ROLE_BENEVOLE'];
+        $this->roles = array_intersect($roles, $validRoles);
+        
+        // Assurez-vous que ROLE_USER est toujours attribué
+        if (!in_array('ROLE_USER', $this->roles)) {
+            $this->roles[] = 'ROLE_USER';
+        }
 
         return $this;
     }
