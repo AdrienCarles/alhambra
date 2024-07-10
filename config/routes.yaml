@@ -44,3 +44,13 @@ commission_new:
     path: /commission/new
     controller: App\Controller\CommissionController::new
     methods:  [GET,POST]
+
+commission_list:
+    path:     /commission/list
+    controller: App\Controller\CommissionController::list
+    methods:  [GET]
+
+commission_success:
+    path:     /commission/success
+    controller: App\Controller\CommissionController::success
+    methods:  [GET]

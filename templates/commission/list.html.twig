@@ -1,0 +1,52 @@
+{% extends 'card.html.twig' %}
+
+{% block title %}Group List{% endblock %}
+
+{% block card_content %}
+
+<ul class="list-group">
+    {% for group in groups %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div class="me-auto"> 
+            {{ group.name }} ({{ group.description }})
+        </div>
+        <div class="btn-group">
+            <a href="" class="btn btn-outline-warning btn-sm">Modifier</a>
+            <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="toast" data-bs-target="#deleteToast" data-bs-group-name="{{ group.name }}">Supprimer</button> 
+            <a href="" class="btn btn-outline-success btn-sm">Voir les messages</a>
+        </div>
+    </li>
+    {% else %}
+    <li class="list-group-item">No groups found</li>
+    {% endfor %}
+</ul>
+
+
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="deleteToast" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">
+          Are you sure you want to delete "<span id="groupName"></span>" group?
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        <button type="button" class="btn btn-light btn-sm me-2 m-auto">Yes, Delete</button>
+      </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const deleteToast = new bootstrap.Toast(document.getElementById('deleteToast'));
+    const toastElement = document.getElementById('deleteToast');
+    const groupNameElement = document.getElementById('groupName');
+
+    toastElement.addEventListener('show.bs.toast', function (event) {
+        const button = event.relatedTarget;
+        const groupName = button.getAttribute('data-bs-group-name');
+        groupNameElement.textContent = groupName; 
+        // You can add any further logic here to handle deletion confirmation
+    });
+});
+</script>
+
+{% endblock %}

@@ -2,12 +2,12 @@
 namespace App\Controller;
 
 use App\Entity\Commission;
+use App\Repository\CommissionRepository;
 use App\Form\CommissionType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class CommissionController extends AbstractController
 {
@@ -26,7 +26,7 @@ class CommissionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($commission);
             $this->entityManager->flush();
-            return $this->redirectToRoute('user_success');
+            return $this->redirectToRoute('commission_success');
         }
         return $this->render('commission/new.html.twig', [
             'commission' => $commission,
@@ -34,8 +34,18 @@ class CommissionController extends AbstractController
         ]);
     }
 
+    public function list(CommissionRepository $groupRepository): Response
+    {
+        $group = $groupRepository->findAll();
+
+        return $this->render('commission/list.html.twig', [
+            'groups' => $group,
+        ]);
+    }
+
+
     public function success(): Response
     {
-        return $this->render('user/success.html.twig');
+        return $this->render('commission/success.html.twig');
     }
 }
