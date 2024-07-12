@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping\ManyToMany;
 
 #[Entity(repositoryClass: "App\Repository\CommissionRepository")]
 class Commission
@@ -25,12 +25,12 @@ class Commission
     #[Column(type: "boolean", options: ["default" => false])]
     private $isClosed;
 
-    #[OneToMany(targetEntity: "App\Entity\Post", mappedBy: "commission")]
-    private $posts;
+    #[ManyToMany(targetEntity: User::class, mappedBy: 'commissions')]
+    private Collection $users;
 
     public function __construct()
     {
-        $this->posts = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -75,30 +75,27 @@ class Commission
     }
 
     /**
-     * @return Collection|Post[]
+     * @return Collection|User[]
      */
-    public function getPosts(): Collection
+    public function getUsers(): Collection
     {
-        return $this->posts;
+        return $this->users;
     }
 
-    public function addPost(Post $post): self
+    public function addUser(User $user): self
     {
-        if (!$this->posts->contains($post)) {
-            $this->posts[] = $post;
-            $post->setCommission($this);
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->addCommission($this);
         }
 
         return $this;
     }
 
-    public function removePost(Post $post): self
+    public function removeUser(User $user): self
     {
-        if ($this->posts->removeElement($post)) {
-            // set the owning side to null (unless already changed)
-            if ($post->getCommission() === $this) {
-                $post->setCommission(null);
-            }
+        if ($this->users->removeElement($user)) {
+            $user->removeCommission($this);
         }
 
         return $this;
