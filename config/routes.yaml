@@ -54,3 +54,8 @@ commission_success:
     path:     /commission/success
     controller: App\Controller\CommissionController::success
     methods:  [GET]
+
+commission_delete: 
+    path: /{id}/delete
+    controller: App\Controller\CommissionController::delete
+    methods: [POST]
