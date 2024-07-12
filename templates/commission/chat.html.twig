@@ -9,16 +9,19 @@
 {% block card_content %}
     <h2 class="display-6">Posts :</h2>
     <div class="chat">
-        <div class="messages">
+        <div class="messages d-flex flex-column">
             {% for post in commission.posts %}
-                <div class="message">
+                <div class="message {% if app.user and post.user == app.user %}message-right{% else %}message-left{% endif %}">
                     {{ post.content }}
                 </div>
             {% endfor %}
         </div>
         <div class="message-input">
-            <input type="text" placeholder="Type a message" class="message-input-field">
-            <button class="send-button">Send</button>
+            <form action="{{ path('post_create') }}" method="post" class="d-flex w-100">
+                <input type="hidden" name="commission_id" value="{{ commission.id }}">
+                <input type="text" placeholder="Message" name="post_content" required class="message-input-field">
+                <button type="submit" class="send-button">Poster</button>
+            </form>        
         </div>
     </div>
 {% endblock %}

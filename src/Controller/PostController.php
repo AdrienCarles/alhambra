@@ -44,6 +44,6 @@ class PostController extends AbstractController
         $entityManager->flush();
 
         // Rediriger vers la commission
-        return new Response('Post created successfully', Response::HTTP_CREATED);
+        return $this->redirectToRoute('commission_chat', ['id' => $commissionId]);
     }
 }
