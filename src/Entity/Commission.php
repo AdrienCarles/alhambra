@@ -23,7 +23,7 @@ class Commission
     private $description;
 
     #[Column(type: "boolean", options: ["default" => false])]
-    private $isClosed;
+    private $isClosed = false;
 
     #[OneToMany(targetEntity: "App\Entity\Post", mappedBy: "commission")]
     private $posts;
