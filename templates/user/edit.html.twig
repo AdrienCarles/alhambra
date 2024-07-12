@@ -1,14 +1,31 @@
-{% extends 'base.html.twig' %}
+{% extends 'card.html.twig' %}
 
 {% block title %}Modifier l'utilisateur{% endblock %}
 
-{% block body %}
-<h1>Modifier l'utilisateur</h1>
+{% block card_content %}
+    {{ form_errors(userForm) }}
+    {{ form_start(userForm, {'attr': {'class': 'form-horizontal'}}) }}
+        <div class="mb-3">
+            {{ form_row(userForm.email, {'attr': {'class': 'form-control', 'placeholder': 'Email'}}) }}
+        </div>
+        <div class="mb-3">
+            {{ form_row(userForm.name, {
+                'label': 'Nom',
+                'attr': {'class': 'form-control', 'placeholder': 'Nom'}
+                }) 
+            }}
+        </div>
+        <div class="mb-3">
+            {{ form_row(userForm.plainPassword, {
+                'label': 'Mot de passe',
+                'attr': {'class': 'form-control', 'placeholder': 'Mot de passe'}
+            }) }}
+        </div>
 
-{{ form_start(userForm) }}
-    {{ form_widget(userForm) }}
-    <button class="btn">Enregistrer les modifications</button>
-{{ form_end(userForm) }}
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-lg btn-primary">Enregistrer les modifications</button>        
+        </div>
+    {{ form_end(userForm) }}
 
-<a href="{{ path('user_list') }}">Retour à la liste des utilisateurs</a>
+    <a href="{{ app.request.headers.get('referer', path('user_list')) }}">Retour</a>
 {% endblock %}

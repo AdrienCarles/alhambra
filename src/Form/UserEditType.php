@@ -24,13 +24,18 @@ class UserEditType extends AbstractType
             ->add('name', TextType::class)
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'first_options' => ['label' => 'Nouveau mot de passe'],
-                'second_options' => ['label' => 'Confirmez le nouveau mot de passe'],
-                'mapped' => false, // Ce champ n'est pas directement mappé sur l'entité User
+                'first_options' => [
+                    'label' => 'Nouveau mot de passe',
+                    'attr' => ['class' => 'form-control', 'placeholder' => 'Nouveau mot de passe'] // Ajoutez cette ligne
+                ],
+                'second_options' => [
+                    'label' => 'Confirmez le nouveau mot de passe',
+                    'attr' => ['class' => 'form-control', 'placeholder' => 'Confirmez le nouveau mot de passe'] // Ajoutez cette ligne
+                ],
+                'mapped' => false,
                 'constraints' => [
                     new Callback([
                         'callback' => function($object, ExecutionContextInterface $context, $payload) {
-                            // Si le premier champ de mot de passe est rempli mais ne correspond pas au second
                             if (!empty($object['first']) && $object['first'] !== $object['second']) {
                                 $context->buildViolation('Les mots de passe doivent correspondre.')
                                         ->atPath('second')
@@ -44,7 +49,6 @@ class UserEditType extends AbstractType
                         'max' => 4096,
                     ]),
                 ],
-                'required' => false, // Rendre ce champ facultatif
             ])
         ;
     }
