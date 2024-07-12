@@ -75,3 +75,9 @@ commission_delete:
 commission_chat:
     path: /commission/chat/{id}
     controller: App\Controller\CommissionController::chat
+
+# Route PostController
+post_create:
+    path: /post/create
+    controller: App\Controller\PostController::create
+    methods: [POST]

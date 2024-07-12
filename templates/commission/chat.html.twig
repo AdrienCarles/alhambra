@@ -1,11 +1,24 @@
 {% extends 'card.html.twig' %}
 {% block title %}{{ commission.name }} {{ commission.description }}{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('build/chat.css') }}">
+{% endblock %}
+
 {% block card_content %}
-    <h2>Utilisateurs :</h2>
-    <ul>
-        {% for user in commission.users %}
-            <li>{{ user.email }}</li> {# Assurez-vous que l'entité User a un champ ou une méthode name #}
-        {% endfor %}
-    </ul>
+    <h2 class="display-6">Posts :</h2>
+    <div class="chat">
+        <div class="messages">
+            {% for post in commission.posts %}
+                <div class="message">
+                    {{ post.content }}
+                </div>
+            {% endfor %}
+        </div>
+        <div class="message-input">
+            <input type="text" placeholder="Type a message" class="message-input-field">
+            <button class="send-button">Send</button>
+        </div>
+    </div>
 {% endblock %}
