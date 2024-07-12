@@ -3,11 +3,27 @@
 {% block title %}Créer une commission{% endblock %}
 
 {% block body %}
-    <h1>Créer une commission</h1>
+        <form method="post" class="col-lg-6 offset-lg-3 p-5">  {# Ajoutez vos classes CSS ici #}
+        <h1 class="h3 mb-4 font-weight-normal">Créer une commission</h1>
+        
+        {{ form_errors(form) }}  {# Affiche les erreurs globales du formulaire #}
 
-    {{ form_start(form) }}
-        {{ form_row(form.name) }}
-        {{ form_row(form.description) }}
-        {{ form_row(form.save) }}
-    {{ form_end(form) }}
+        <div class="form-group">
+            {{ form_label(form.name, 'Nom de la commission', {'label_attr': {'class': 'mb-2'}}) }}
+            {{ form_widget(form.name, {'attr': {'class': 'form-control mb-4'}}) }}
+            {{ form_errors(form.name) }}  {# Affiche les erreurs spécifiques au champ name #}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.description, 'Description de la commission', {'label_attr': {'class': 'mb-2'}}) }}
+            {{ form_widget(form.description, {'attr': {'class': 'form-control mb-4'}}) }}
+            {{ form_errors(form.description) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_row(form.save, {'attr': {'class': 'btn btn-lg btn-primary'}}) }}
+        </div>
+
+        {{ form_end(form) }}  {# Inclut les champs cachés, comme le token CSRF #}
+    </form>
 {% endblock %}
