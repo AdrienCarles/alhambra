@@ -6,6 +6,6 @@
  */
 import './styles/app.scss';
 
-import {Alert,Button,Carousel,Collapse,Dropdown,Modal,Offcanvas,Popover,ScrollSpy,Tab,Toast,Tooltip} from 'bootstrap';
+import 'bootstrap';
 
 console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');

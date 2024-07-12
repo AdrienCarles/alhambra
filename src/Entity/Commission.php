@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\ManyToMany;
 use Doctrine\ORM\Mapping\OneToMany;
 
 #[Entity(repositoryClass: "App\Repository\CommissionRepository")]
@@ -25,11 +26,15 @@ class Commission
     #[Column(type: "boolean", options: ["default" => false])]
     private $isClosed = false;
 
-    #[OneToMany(targetEntity: "App\Entity\Post", mappedBy: "commission")]
+    #[ManyToMany(targetEntity: User::class, mappedBy: 'commissions')]
+    private Collection $users;
+
+    #[OneToMany(mappedBy: "commission", targetEntity: "App\Entity\Post")]
     private $posts;
 
     public function __construct()
     {
+        $this->users = new ArrayCollection();
         $this->posts = new ArrayCollection();
     }
 
@@ -75,23 +80,50 @@ class Commission
     }
 
     /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->addCommission($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->removeElement($user)) {
+            $user->removeCommission($this);
+        }
+
+        return $this;
+    }
+
+    /**
      * @return Collection|Post[]
      */
     public function getPosts(): Collection
     {
         return $this->posts;
     }
-
+    
     public function addPost(Post $post): self
     {
         if (!$this->posts->contains($post)) {
             $this->posts[] = $post;
             $post->setCommission($this);
         }
-
+    
         return $this;
     }
-
+    
     public function removePost(Post $post): self
     {
         if ($this->posts->removeElement($post)) {
@@ -100,7 +132,7 @@ class Commission
                 $post->setCommission(null);
             }
         }
-
+    
         return $this;
     }
 }

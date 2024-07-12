@@ -3,10 +3,11 @@
         "@babel/core": "^7.17.0",
         "@babel/preset-env": "^7.16.0",
         "@symfony/stimulus-bridge": "^3.2.2",
-        "@symfony/webpack-encore": "^4.0.0",
+        "@symfony/webpack-encore": "^4.6.1",
         "autoprefixer": "^10.4.19",
         "bootstrap": "^5.3.3",
         "core-js": "^3.23.0",
+        "file-loader": "^6.0.0",
         "postcss-loader": "^7.0.0",
         "regenerator-runtime": "^0.13.9",
         "sass": "^1.77.4",
@@ -25,7 +26,6 @@
     },
     "dependencies": {
         "autoprefixer": "^10.4.19",
-        "bootstrap": "^5.3.3",
         "node-sass": "^9.0.0"
     }
 }

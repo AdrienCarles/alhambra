@@ -15,7 +15,7 @@ class Post
     #[Id, GeneratedValue, Column(type: "integer")]
     private $id;
 
-    #[Column(type: "string", length: 255)]
+    #[Column(type: "string", length: 255, nullable: true)]
     private $title;
 
     #[Column(type: "text")]
@@ -24,13 +24,18 @@ class Post
     #[Column(type: "datetime")]
     private $createdAt;
 
-    #[ManyToOne(targetEntity: "App\Entity\User", inversedBy: "posts")]
-    #[JoinColumn(nullable: false)]
+    #[ManyToOne(targetEntity: "App\Entity\User")]
+    #[JoinColumn(name: "user_id", referencedColumnName: "id")]
     private $user;
 
     #[ManyToOne(targetEntity: "App\Entity\Commission", inversedBy: "posts")]
-    #[JoinColumn(nullable: false)]
+    #[JoinColumn(name: "commission_id", referencedColumnName: "id")]
     private $commission;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
+    }
 
     public function getId(): ?int
     {
@@ -89,11 +94,11 @@ class Post
     {
         return $this->commission;
     }
-
+    
     public function setCommission(?Commission $commission): self
     {
         $this->commission = $commission;
-
+    
         return $this;
     }
 }

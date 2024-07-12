@@ -35,6 +35,20 @@ class CommissionController extends AbstractController
         ]);
     }
 
+    public function chat(CommissionRepository $groupRepository, $id): Response
+    {
+        $commission = $groupRepository->find($id);
+    
+        if (!$commission) {
+            throw $this->createNotFoundException('No user commission for id '.$id);
+        }
+    
+        return $this->render('commission/chat.html.twig', [
+            'commission' => $commission,
+            'currentCommissionId' => $id, // Utilisez directement $id ici
+        ]);
+    }
+
     public function list(CommissionRepository $groupRepository): Response
     {
         $group = $groupRepository->findAll();

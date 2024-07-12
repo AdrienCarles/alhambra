@@ -17,9 +17,9 @@
                         Supprimer
                     </button>
 
-                    <a href="" class="btn btn-outline-success btn-sm">Voir les messages</a>
-                </div>
-            </li>
+                <a href="{{ path('commission_chat', {'id': group.id}) }}" class="btn btn-outline-success btn-sm">Voir les messages</a>
+            </div>
+        </li>
         {% else %}
             <li class="list-group-item">No groups found</li>
         {% endfor %}

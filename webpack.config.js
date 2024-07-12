@@ -21,7 +21,8 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/app.js')
-
+    .addStyleEntry('chat', './assets/styles/chat.scss')
+    
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
 
@@ -57,6 +58,10 @@ Encore
     .enableSassLoader()
     .enablePostCssLoader()
 
+    .copyFiles({
+        from: './assets/images',
+    })
+
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()
 
@@ -69,6 +74,6 @@ Encore
 
     // uncomment if you're having problems with a jQuery plugin
     //.autoProvidejQuery()
-;
+    ;
 
 module.exports = Encore.getWebpackConfig();
