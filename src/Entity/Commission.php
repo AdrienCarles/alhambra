@@ -22,6 +22,9 @@ class Commission
     #[Column(type: "text", nullable: true)]
     private $description;
 
+    #[Column(type: "boolean", options: ["default" => false])]
+    private $isClosed;
+
     #[OneToMany(targetEntity: "App\Entity\Post", mappedBy: "commission")]
     private $posts;
 
@@ -55,6 +58,18 @@ class Commission
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getIsClosed(): ?bool
+    {
+        return $this->isClosed;
+    }
+
+    public function setIsClosed(?bool $isClosed): ?bool
+    {
+        $this->isClosed = $isClosed;
 
         return $this;
     }
