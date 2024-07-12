@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier l'utilisateur{% endblock %}
+
+{% block body %}
+<h1>Modifier l'utilisateur</h1>
+
+{{ form_start(userForm) }}
+    {{ form_widget(userForm) }}
+    <button class="btn">Enregistrer les modifications</button>
+{{ form_end(userForm) }}
+
+<a href="{{ path('user_list') }}">Retour à la liste des utilisateurs</a>
+{% endblock %}

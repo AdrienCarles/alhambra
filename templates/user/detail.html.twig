@@ -7,24 +7,10 @@
     <p class="mb-0"><strong>Email:</strong> {{ user.email }}</p>
     <p class="mb-0"><strong>Nom:</strong> {{ user.name }}</p>
 
-    <form id="deleteForm" action="{{ path('user_delete', {'id': user.id}) }}" method="post">
-        <input type="hidden" name="_method" value="DELETE">
-        <input type="button" id="deleteButton" value="Delete" class="btn btn-danger mt-3">
-    </form>
-    
-{% endblock %}
-
-{% block javascripts %}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var deleteButton = document.getElementById('deleteButton');
-            if (deleteButton) {
-                deleteButton.addEventListener('click', function() {
-                    if(confirm('Voulez vous vraiment suprimmer cet utilisateur ?')) {
-                        document.getElementById('deleteForm').submit();
-                    }
-                });
-            }
-        });
-    </script>
+    <a href="{{ path('user_edit', {'id': user.id}) }}" class="btn btn-primary mt-3">Edit</a>
+    {% if user.id == currentUserId %}
+        <a href="javascript:void(0);" class="btn btn-danger mt-3 disabled" tabindex="-1" aria-disabled="true">Supprimer</a>
+    {% else %}
+        <a href="{{ path('user_delete', {'id': user.id}) }}" class="btn btn-danger mt-3">Supprimer</a>
+    {% endif %}
 {% endblock %}

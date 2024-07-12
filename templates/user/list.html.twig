@@ -1,11 +1,8 @@
 {% extends 'card.html.twig' %}
 
-{% block title %}User List{% endblock %}
+{% block title %}Liste des utilisateurs{% endblock %}
 
 {% block card_content %}
-    <div class="d-flex justify-content-end">
-        <a href="{{ path('app_register') }}" class="btn btn-secondary mb-3">+</a>
-    </div>
     <ul class="list-group">
         {% for user in users %}
             <li class="list-group-item">
