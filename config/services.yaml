@@ -19,6 +19,10 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+    
+    App\Form\UserEditType:
+        arguments:
+            $security: '@security.helper'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

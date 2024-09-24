@@ -9,7 +9,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 
 class UserController extends AbstractController
@@ -52,22 +54,46 @@ class UserController extends AbstractController
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
-            $plainPassword = $form->get('plainPassword')->getData();
+            $plainPassword = $form->get('plainPassword')->get('first')->getData();
             if (!empty($plainPassword)) {
                 // Encodez et définissez le nouveau mot de passe
                 $encodedPassword = $passwordHasher->hashPassword($user, $plainPassword);
                 $user->setPassword($encodedPassword);
-    
-                // Persistez les modifications
-                $entityManager->persist($user);
-                $entityManager->flush();
-    
-                return $this->redirectToRoute('user_list');
             }
+
+            // Persister les modifications
+            $entityManager->persist($user);
+            $entityManager->flush();
+            
+            return $this->redirectToRoute('user_list');
         }
     
         return $this->render('user/edit.html.twig', [
             'userForm' => $form->createView(),
         ]);
     }
+
+    public function delete(Request $request, User $user, EntityManagerInterface $entityManager): RedirectResponse
+    {
+        // Empêcher l'utilisateur de supprimer son propre compte
+        if ($this->getUser()->getId() === $user->getId()) {
+            throw new AccessDeniedException('Vous ne pouvez pas supprimer votre propre compte.');
+        }
+    
+        // Vérification du token CSRF
+        if ($this->isCsrfTokenValid('delete_user_' . $user->getId(), $request->request->get('_token'))) {
+            // Supprimer l'utilisateur
+            $entityManager->remove($user);
+            $entityManager->flush();
+    
+            // Message de succès
+            $this->addFlash('success', 'L\'utilisateur a été supprimé avec succès.');
+        } else {
+            $this->addFlash('error', 'Action non autorisée.');
+        }
+    
+        // Redirection après suppression
+        return $this->redirectToRoute('user_list');
+    }
+    
 }

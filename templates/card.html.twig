@@ -1,12 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<div class="card col-lg-6 offset-lg-3 p-5">
-    <div class="card-header">
-        <h1 class="my-4">{% block title %}{% endblock %}</h1>
-    </div>
-    <div class="card-body">
-        {% block card_content %}{% endblock %}
+<div class="container mt-3">
+    <div class="row justify-content-center">
+        <div class="card col-12">
+            <div class="card-header">
+                <h1 class="my-4">{% block title %}{% endblock %}</h1>
+            </div>
+            <div class="card-body">
+                {% block card_content %}{% endblock %}
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

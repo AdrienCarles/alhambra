@@ -4,10 +4,16 @@
 
 {% block card_content %}
     <ul class="list-group">
+        <a href="/register">Ajouter</a>
         {% for user in users %}
             <li class="list-group-item">
                 <a href="{{ path('user_detail', {'id': user.id}) }}" class="text-decoration-none text-dark">
-                    {{ user.name }} ({{ user.email }})
+                    {{ user.name }} ({{ user.email }}) 
+                    {% for role in user.roles %}
+                        {% if role != 'ROLE_USER' %}
+                           - {{ role|replace({'ROLE_': ''}) }}
+                        {% endif %}
+                    {% endfor %}
                 </a>
             </li>
         {% else %}

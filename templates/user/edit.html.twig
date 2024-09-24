@@ -15,17 +15,39 @@
                 }) 
             }}
         </div>
-        <div class="mb-3">
-            {{ form_row(userForm.plainPassword, {
-                'label': 'Mot de passe',
-                'attr': {'class': 'form-control', 'placeholder': 'Mot de passe'}
-            }) }}
-        </div>
-
-        <div class="d-grid gap-2">
-            <button type="submit" class="btn btn-lg btn-primary">Enregistrer les modifications</button>        
+        {% if is_granted('ROLE_ADMINISTRATEUR') %}
+            <div class="mb-3">
+                <label for="user_roles" class="form-label">Rôles</label>
+                <div class="form-check">
+                    {{ form_widget(userForm.roles.0, {'attr': {'class': 'form-check-input'}}) }}
+                    <label class="form-check-label" for="user_roles_0">Administrateur</label>
+                </div>
+                <div class="form-check">
+                    {{ form_widget(userForm.roles.1, {'attr': {'class': 'form-check-input'}}) }}
+                    <label class="form-check-label" for="user_roles_1">Bénévole</label>
+                </div>
+            </div>
+        
+            <div class="mb-3">
+                {{ form_row(userForm.plainPassword.first, {
+                    'label': 'Nouveau mot de passe',
+                    'attr': {'class': 'form-control', 'placeholder': 'Nouveau mot de passe', 'required': false}
+                }) }}
+            </div>
+            <div class="mb-3">
+                {{ form_row(userForm.plainPassword.second, {
+                    'label': 'Confirmez le nouveau mot de passe',
+                    'attr': {'class': 'form-control', 'placeholder': 'Confirmez le nouveau mot de passe', 'required': false}
+                }) }}
+            </div>
+        {% endif %}
+        <div class="row mb-3">
+            <div class="col">
+                <button type="submit" class="btn btn-lg btn-primary w-100">Enregistrer</button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-lg btn-secondary w-100" onclick="window.history.back()">Annuler</button>
+            </div>
         </div>
     {{ form_end(userForm) }}
-
-    <a href="{{ app.request.headers.get('referer', path('user_list')) }}">Retour</a>
 {% endblock %}

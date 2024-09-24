@@ -7,10 +7,19 @@
     <p class="mb-0"><strong>Email:</strong> {{ user.email }}</p>
     <p class="mb-0"><strong>Nom:</strong> {{ user.name }}</p>
 
-    <a href="{{ path('user_edit', {'id': user.id}) }}" class="btn btn-primary mt-3">Edit</a>
-    {% if user.id == currentUserId %}
-        <a href="javascript:void(0);" class="btn btn-danger mt-3 disabled" tabindex="-1" aria-disabled="true">Supprimer</a>
-    {% else %}
-        <a href="{{ path('user_delete', {'id': user.id}) }}" class="btn btn-danger mt-3">Supprimer</a>
-    {% endif %}
+    <div class="d-flex mt-3">
+        <a href="{{ path('user_edit', {'id': user.id}) }}" class="btn btn-primary me-2">Modifier</a>
+
+        {% if is_granted('ROLE_ADMINISTRATEUR') %}
+            {% if user.id == currentUserId %}
+                <a href="javascript:void(0);" class="btn btn-danger disabled" tabindex="-1" aria-disabled="true">Supprimer</a>
+            {% else %}
+                <!-- Formulaire pour suppression via POST -->
+                <form method="post" action="{{ path('user_delete', {'id': user.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete_user_' ~ user.id) }}">
+                    <button class="btn btn-danger">Supprimer</button>
+                </form>
+            {% endif %}
+        {% endif %}
+    </div>
 {% endblock %}

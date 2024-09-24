@@ -1,11 +1,8 @@
 doctrine:
     dbal:
+        driver: 'pdo_mysql'   # Forcer l'utilisation de MySQL
+        server_version: '8.4'  # Spécifier la version de MySQL que vous utilisez
         url: '%env(resolve:DATABASE_URL)%'
-
-        # IMPORTANT: You MUST configure your server version,
-        # either here or in the DATABASE_URL env var (see .env file)
-        #server_version: '16'
-
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
     orm:
