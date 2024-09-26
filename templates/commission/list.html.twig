@@ -6,10 +6,10 @@
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 <div class="me-auto">{{ group.name }} ({{ group.description }})</div>
                 <div class="btn-group">
-                    <a href="" class="btn btn-outline-warning btn-sm">Modifier</a>
+                    <a href="" class="btn btn-outline-warning btn-sm m-2 rounded">Modifier</a>
 
                     <button type="button" 
-                            class="btn btn-outline-danger btn-sm" 
+                            class="btn btn-outline-danger btn-sm m-2 rounded" 
                             data-bs-toggle="toast" 
                             data-bs-target="#confirmDeleteToast"
                             data-bs-group-name="{{ group.name }}"
@@ -17,7 +17,7 @@
                         Supprimer
                     </button>
 
-                <a href="{{ path('commission_chat', {'id': group.id}) }}" class="btn btn-outline-success btn-sm">Voir les messages</a>
+                <a href="{{ path('commission_chat', {'id': group.id}) }}" class="btn btn-outline-success btn-sm m-2 rounded">Voir les messages</a>
             </div>
         </li>
         {% else %}
