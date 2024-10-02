@@ -58,6 +58,22 @@ class CommissionController extends AbstractController
         ]);
     }
 
+    public function edit(CommissionRepository $CommissionRepository, $id): Response
+    {
+        $commission = $CommissionRepository->find($id);
+
+        $currentUserId = $this->getUser()->getId();
+
+        if (!$commission) {
+            throw $this->createNotFoundException('No commission found for id '.$id);
+        }
+
+        return $this->render('commission/edit.html.twig', [
+            'commission' => $commission,
+        ]);
+    }
+
+
     #[Route('/{id}/delete', name: 'commission_delete', methods: ['POST'])]
     public function delete(Commission $commission, EntityManagerInterface $entityManager): Response
     {

@@ -1,0 +1,17 @@
+{% extends 'card.html.twig' %}
+
+{% block title %}Modifier la commission{% endblock %}
+
+{% block card_content %}
+    <h1>{{ commission.name }}</h1>
+    <p class="mb-0"><strong>Nom:</strong> {{ commission.name }}</p>
+    <p class="mb-0"><strong>Description:</strong> {{ commission.description}}</p>
+    {% if commission.isClosed == false %}
+    <input type="checkbox" id="isclosed">
+    <label for="isclosed">Archiver la commission ?</label>
+    {% else %}
+    <input type="checkbox" id="isclosed">
+    <label for="isclosed">Activer la commission ?</label>
+    {% endif %}
+
+{% endblock %}

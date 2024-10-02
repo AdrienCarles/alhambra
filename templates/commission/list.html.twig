@@ -6,7 +6,7 @@
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 <div class="me-auto">{{ group.name }} ({{ group.description }})</div>
                 <div class="btn-group">
-                    <a href="" class="btn btn-outline-warning btn-sm m-2 rounded">Modifier</a>
+                    <a href="{{ path('commission_edit', {'id': group.id}) }}" class="btn btn-outline-warning btn-sm m-2 rounded">Modifier</a>
 
                     <button type="button" 
                             class="btn btn-outline-danger btn-sm m-2 rounded" 

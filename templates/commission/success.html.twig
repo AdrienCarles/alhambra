@@ -1,8 +1,9 @@
-{% extends 'base.html.twig' %}
+{% extends 'card.html.twig' %}
 
 {% block title %}Group Creation Success{% endblock %}
 
-{% block body %}
+{% block card_content %}
     <h1>Group Creation Success</h1>
     <p>Your group has been successfully created.</p>
+    <a href="{{ path('commission_list') }}" class="btn btn-outline-success btn-sm m-2 rounded">Liste commission</a>
 {% endblock %}
