@@ -3,15 +3,60 @@
 {% block title %}Modifier la commission{% endblock %}
 
 {% block card_content %}
-    <h1>{{ commission.name }}</h1>
-    <p class="mb-0"><strong>Nom:</strong> {{ commission.name }}</p>
-    <p class="mb-0"><strong>Description:</strong> {{ commission.description}}</p>
-    {% if commission.isClosed == false %}
-    <input type="checkbox" id="isclosed">
-    <label for="isclosed">Archiver la commission ?</label>
-    {% else %}
-    <input type="checkbox" id="isclosed">
-    <label for="isclosed">Activer la commission ?</label>
-    {% endif %}
+    {{ form_errors(commissionForm) }}
+    {{ form_start(commissionForm, {'attr': {'class': 'form-horizontal'}}) }}
+        <div class="mb-3">
+            {{ form_row(commissionForm.name, {'attr': {'class': 'form-control', 'placeholder': 'Nom'}}) }}
+        </div>
+        <div class="mb-3">
+            {{ form_row(commissionForm.description, {
+                'label': 'Description',
+                'attr': {'class': 'form-control', 'placeholder': 'Description'}
+                }) 
+            }}
+        </div>
+        <div class="mb-3">
+            <!-- Bouton pour archiver / désarchiver la commission -->
+            <button type="button" id="toggleClosedBtn" class="btn btn-sm btn-outline-primary w-100">Archiver la commission</button>
+            <!-- Champ de checkbox caché -->
+            {{ form_row(commissionForm.is_closed, {
+                'label': ' ',
+                'attr': {'class': 'form-check-input', 'style': 'display: none;'}
+            }) }}
+        </div>
+        <div class="row mb-3">
+            <div class="col">
+                <button type="submit" class="btn btn-lg btn-primary w-100">Enregistrer</button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-lg btn-secondary w-100" onclick="window.history.back()">Annuler</button>
+            </div>
+        </div>
+    {{ form_end(commissionForm) }}
 
+    <!-- JavaScript pour basculer la checkbox -->
+    <script>
+        document.getElementById('toggleClosedBtn').addEventListener('click', function () {
+            const checkbox = document.getElementById('{{ commissionForm.is_closed.vars.id }}');
+            checkbox.checked = !checkbox.checked;
+
+            // Changer le texte du bouton selon l'état de la checkbox
+            if (checkbox.checked) {
+                this.textContent = 'Désarchiver la commission';
+            } else {
+                this.textContent = 'Archiver la commission';
+            }
+        });
+
+        // Initialiser le texte du bouton au chargement de la page
+        window.addEventListener('load', function() {
+            const checkbox = document.getElementById('{{ commissionForm.is_closed.vars.id }}');
+            const toggleBtn = document.getElementById('toggleClosedBtn');
+            if (checkbox.checked) {
+                toggleBtn.textContent = 'Désarchiver la commission';
+            } else {
+                toggleBtn.textContent = 'Archiver la commission';
+            }
+        });
+    </script>
 {% endblock %}

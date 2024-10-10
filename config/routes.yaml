@@ -70,7 +70,7 @@ commission_success:
 commission_edit:
     path: /commission/{id}
     controller: App\Controller\CommissionController::edit
-    methods: [GET]
+    methods: [GET,POST]
 
 commission_delete: 
     path: /{id}/delete

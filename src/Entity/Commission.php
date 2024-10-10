@@ -72,7 +72,7 @@ class Commission
         return $this->isClosed;
     }
 
-    public function setIsClosed(?bool $isClosed): ?bool
+    public function setIsClosed(?bool $isClosed): self
     {
         $this->isClosed = $isClosed;
 

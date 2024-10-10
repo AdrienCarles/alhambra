@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Entity\Commission;
 use App\Repository\CommissionRepository;
 use App\Form\CommissionType;
+use App\Form\CommissionEditType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,18 +59,21 @@ class CommissionController extends AbstractController
         ]);
     }
 
-    public function edit(CommissionRepository $CommissionRepository, $id): Response
+    public function edit(Request $request, Commission $commission, EntityManagerInterface $entityManager): Response
     {
-        $commission = $CommissionRepository->find($id);
-
-        $currentUserId = $this->getUser()->getId();
-
-        if (!$commission) {
-            throw $this->createNotFoundException('No commission found for id '.$id);
+        $form = $this->createForm(CommissionEditType::class, $commission);
+        $form->handleRequest($request);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Persister les modifications
+            $entityManager->persist($commission);
+            $entityManager->flush();
+            
+            return $this->redirectToRoute('commission_list');
         }
-
+    
         return $this->render('commission/edit.html.twig', [
-            'commission' => $commission,
+            'commissionForm' => $form->createView(),
         ]);
     }
 

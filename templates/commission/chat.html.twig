@@ -1,5 +1,5 @@
 {% extends 'card.html.twig' %}
-{% block title %}{{ commission.name }} {{ commission.description }}{% endblock %}
+{% block title %}{{ commission.name }} {{ commission.description }} {% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -19,8 +19,13 @@
         <div class="message-input">
             <form action="{{ path('post_create') }}" method="post" class="d-flex w-100">
                 <input type="hidden" name="commission_id" value="{{ commission.id }}">
+                {% if commission.isClosed == true %}
+                <input type="text" placeholder="Commission archivé" name="post_content" required class="message-input-field" disabled>
+                <button type="submit" class="send-button btn-outline-warning" disabled>Envoyer</button>  
+                {% else %}
                 <input type="text" placeholder="Message" name="post_content" required class="message-input-field">
-                <button type="submit" class="send-button">Envoyer</button>   
+                <button type="submit" class="send-button">Envoyer</button>  
+                {% endif %} 
             </form>        
         </div>
     </div>
