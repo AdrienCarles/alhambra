@@ -1,5 +1,10 @@
 {% extends 'card.html.twig' %}
-{% block title %}{{ commission.name }} {{ commission.description }} {% endblock %}
+{% block title %}
+
+    {{ commission.name }}
+
+{% endblock %}
+
 
 {% block stylesheets %}
     {{ parent() }}
@@ -7,7 +12,15 @@
 {% endblock %}
 
 {% block card_content %}
-    <h2 class="display-6">Posts :</h2>
+    <div class="row text-center justify-content-between py-1 m-2 align-content-between flex-wrap">
+        <div class="col-sm-3 d-flex justify-content-start align-items-center">{{commission.description}}</div>
+        {% if commission.isClosed == true %}
+            <h2 class="col-sm-5 d-flex justify-content-center align-items-center">Commission archivé</h2>
+        {% endif %}
+        <div class="col-sm-2 justify-content-end">
+            <button type="button" class="btn btn-warning">Suivre</button>
+        </div>
+    </div>
     <div class="chat">
         <div class="messages d-flex flex-column">
             {% for post in commission.posts %}
@@ -19,14 +32,14 @@
         <div class="message-input">
             <form action="{{ path('post_create') }}" method="post" class="d-flex w-100">
                 <input type="hidden" name="commission_id" value="{{ commission.id }}">
-                {% if commission.isClosed == true %}
-                <input type="text" placeholder="Commission archivé" name="post_content" required class="message-input-field" disabled>
-                <button type="submit" class="send-button btn-outline-warning" disabled>Envoyer</button>  
-                {% else %}
-                <input type="text" placeholder="Message" name="post_content" required class="message-input-field">
-                <button type="submit" class="send-button">Envoyer</button>  
-                {% endif %} 
+                <input type="text" placeholder="Message" name="post_content" required class="message-input-field" {{ commission.isClosed == true ? 'disabled' : ''  }}>
+                <button type="submit" class="send-button" {{ commission.isClosed == true ? 'disabled' : ''  }}>Envoyer</button>  
             </form>        
         </div>
     </div>
 {% endblock %}
+
+<script>
+    
+
+</script>
