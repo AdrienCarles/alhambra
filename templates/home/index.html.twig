@@ -11,26 +11,51 @@
             {% endif %}
         </div>
     </div>
+
     <div class="row mt-4">
         <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h2 class="h5 mb-0">Commission</h2>
-                <a href="/commission/new" class="btn btn-primary">Ajouter une commission</a>
-            </div>
+            <h2>Commissions de Flux Global</h2>
             <div class="row">
-                {% for commission in commissions %}
-                    <div class="col-6 col-md-4 mb-4">
+                {% for commission in globalCommissions %}
+                    <div class="col-4 col-md-3 mb-4">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">{{ commission.name }}</h5>
+                                <h5 class="card-title">
+                                    {{ commission.name }}
+                                    <i class="fas fa-bell"></i>
+                                </h5>
                                 <a href="{{ path('commission_chat', {'id': commission.id}) }}" class="btn btn-outline-success rounded">Messages</a>
-                                <a href="{{ path('commission_edit', {'id': commission.id}) }}" class="btn btn-outline-warning">Modifier</a>
                             </div>
                         </div>
                     </div>
                 {% else %}
                     <div class="col-12">
-                        <p>Aucune commission trouvée.</p>
+                        <p>Aucune commission de flux global trouvée.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <h2>Commissions Temporaires</h2>
+            <div class="row">
+                {% for commission in temporaryCommissions %}
+                    <div class="col-6 col-md-4 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    {{ commission.name }}
+                                    <i class="fas fa-bell"></i>
+                                </h5>
+                                <a href="{{ path('commission_chat', {'id': commission.id}) }}" class="btn btn-outline-success rounded">Messages</a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="col-12">
+                        <p>Aucune commission temporaire trouvée.</p>
                     </div>
                 {% endfor %}
             </div>

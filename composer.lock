@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "085d8f15860cc3be6568b1847efccc1d",
+    "content-hash": "e7051860583ca198f4401b532a1aa85a",
     "packages": [
         {
             "name": "amphp/amp",
@@ -5897,16 +5897,16 @@
         },
         {
             "name": "symfony/messenger",
-            "version": "v7.1.5",
+            "version": "v7.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/messenger.git",
-                "reference": "e1c0ced845e3dac12ab428c5ed42dbe7a58ca576"
+                "reference": "86d9aead6c40a56a528f2fb881a8be253efbbd1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/messenger/zipball/e1c0ced845e3dac12ab428c5ed42dbe7a58ca576",
-                "reference": "e1c0ced845e3dac12ab428c5ed42dbe7a58ca576",
+                "url": "https://api.github.com/repos/symfony/messenger/zipball/86d9aead6c40a56a528f2fb881a8be253efbbd1f",
+                "reference": "86d9aead6c40a56a528f2fb881a8be253efbbd1f",
                 "shasum": ""
             },
             "require": {
@@ -5963,7 +5963,7 @@
             "description": "Helps applications send and receive messages to/from other applications or via message queues",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/messenger/tree/v7.1.5"
+                "source": "https://github.com/symfony/messenger/tree/v7.1.8"
             },
             "funding": [
                 {
@@ -5979,7 +5979,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-08T12:32:26+00:00"
+            "time": "2024-11-09T09:16:45+00:00"
         },
         {
             "name": "symfony/mime",

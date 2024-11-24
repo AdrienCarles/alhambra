@@ -34,17 +34,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Usercommission::class)]
     private Collection $usercommissions;
 
-    #[ORM\OneToMany(targetEntity: "App\Entity\Notification", mappedBy: "user")]
-    private $notifications;
-
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Post::class)]
-    private Collection $posts;
-
     public function __construct()
     {
         $this->usercommissions = new ArrayCollection();
-        $this->posts = new ArrayCollection();
-        $this->notifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -155,66 +147,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
-    /**
-     * @return Collection|Post[]
-     */
-    public function getPosts(): Collection
-    {
-        return $this->posts;
-    }
     
-    public function addPost(Post $post): self
-    {
-        if (!$this->posts->contains($post)) {
-            $this->posts[] = $post;
-            $post->setUser($this);
-        }
-    
-        return $this;
-    }
-    
-    public function removePost(Post $post): self
-    {
-        if ($this->posts->removeElement($post)) {
-            if ($post->getUser() === $this) {
-                $post->setUser(null);
-            }
-        }
-    
-        return $this;
-    }
-
-       /**
-     * @return Collection|Notification[]
-     */
-    public function getNotifications(): Collection
-    {
-        return $this->notifications;
-    }
-
-    public function addNotification(Notification $notification): self
-    {
-        if (!$this->notifications->contains($notification)) {
-            $this->notifications[] = $notification;
-            $notification->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeNotification(Notification $notification): self
-    {
-        if ($this->notifications->removeElement($notification)) {
-            // set the owning side to null (unless already changed)
-            if ($notification->getUser() === $this) {
-                $notification->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
     /**
      * @see UserInterface
      */

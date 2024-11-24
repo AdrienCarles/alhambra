@@ -59,6 +59,9 @@ class CommissionController extends AbstractController
         ]);
     }
 
+    /**
+     * @IsGranted({"ROLE_ADMINISTRATEUR", "ROLE_PRIVILEGED_USER"})
+     */
     public function edit(Request $request, Commission $commission, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(CommissionEditType::class, $commission);
@@ -76,7 +79,6 @@ class CommissionController extends AbstractController
             'commissionForm' => $form->createView(),
         ]);
     }
-
 
     #[Route('/{id}/delete', name: 'commission_delete', methods: ['POST'])]
     public function delete(Commission $commission, EntityManagerInterface $entityManager): Response

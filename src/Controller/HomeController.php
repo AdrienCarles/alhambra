@@ -11,9 +11,20 @@ class HomeController extends AbstractController
     public function index(CommissionRepository $commissionRepository): Response
     {
         $commissions = $commissionRepository->findAll();
+        $temporaryCommissions = [];
+        $globalCommissions = [];
+    
+        foreach ($commissions as $commission) {
+            if ($commission->getIsGeneral()) {
+                $globalCommissions[] = $commission;
+            } else {
+                $temporaryCommissions[] = $commission;
+            }
+        }
 
         return $this->render('home/index.html.twig', [
-            'commissions' => $commissions,
+            'temporaryCommissions' => $temporaryCommissions,
+            'globalCommissions' => $globalCommissions,
         ]);
     }
 }
