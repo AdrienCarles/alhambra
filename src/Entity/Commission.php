@@ -1,40 +1,36 @@
 <?php
-// src/Entity/Commission.php
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\GeneratedValue;
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\ManyToMany;
-use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping as ORM;
 
-#[Entity(repositoryClass: "App\Repository\CommissionRepository")]
+#[ORM\Entity(repositoryClass: "App\Repository\CommissionRepository")]
 class Commission
 {
-    #[Id, GeneratedValue, Column(type: "integer")]
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: "integer")]
     private $id;
 
-    #[Column(type: "string", length: 255)]
+    #[ORM\Column(type: "string", length: 255)]
     private $name;
 
-    #[Column(type: "text", nullable: true)]
+    #[ORM\Column(type: "text", nullable: true)]
     private $description;
 
-    #[Column(type: "boolean", options: ["default" => false])]
+    #[ORM\Column(type: "boolean", options: ["default" => false])]
     private $isClosed = false;
 
-    #[ManyToMany(targetEntity: User::class, mappedBy: 'commissions')]
-    private Collection $users;
+    #[ORM\OneToMany(mappedBy: 'commission', targetEntity: Usercommission::class)]
+    private Collection $usercommissions;
 
-    #[OneToMany(mappedBy: "commission", targetEntity: "App\Entity\Post")]
-    private $posts;
+    #[ORM\OneToMany(mappedBy: 'commission', targetEntity: Post::class)]
+    private Collection $posts;
 
     public function __construct()
     {
-        $this->users = new ArrayCollection();
+        $this->usercommissions = new ArrayCollection();
         $this->posts = new ArrayCollection();
     }
 
@@ -67,12 +63,12 @@ class Commission
         return $this;
     }
 
-    public function getIsClosed(): ?bool
+    public function getIsClosed(): bool
     {
         return $this->isClosed;
     }
 
-    public function setIsClosed(?bool $isClosed): self
+    public function setIsClosed(bool $isClosed): self
     {
         $this->isClosed = $isClosed;
 
@@ -80,27 +76,30 @@ class Commission
     }
 
     /**
-     * @return Collection|User[]
+     * @return Collection|Usercommission[]
      */
-    public function getUsers(): Collection
+    public function getUsercommissions(): Collection
     {
-        return $this->users;
+        return $this->usercommissions;
     }
 
-    public function addUser(User $user): self
+    public function addUsercommission(Usercommission $usercommission): self
     {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->addCommission($this);
+        if (!$this->usercommissions->contains($usercommission)) {
+            $this->usercommissions[] = $usercommission;
+            $usercommission->setCommission($this);
         }
 
         return $this;
     }
 
-    public function removeUser(User $user): self
+    public function removeUsercommission(Usercommission $usercommission): self
     {
-        if ($this->users->removeElement($user)) {
-            $user->removeCommission($this);
+        if ($this->usercommissions->removeElement($usercommission)) {
+            // set the owning side to null (unless already changed)
+            if ($usercommission->getCommission() === $this) {
+                $usercommission->setCommission(null);
+            }
         }
 
         return $this;
@@ -113,17 +112,17 @@ class Commission
     {
         return $this->posts;
     }
-    
+
     public function addPost(Post $post): self
     {
         if (!$this->posts->contains($post)) {
             $this->posts[] = $post;
             $post->setCommission($this);
         }
-    
+
         return $this;
     }
-    
+
     public function removePost(Post $post): self
     {
         if ($this->posts->removeElement($post)) {
@@ -132,7 +131,7 @@ class Commission
                 $post->setCommission(null);
             }
         }
-    
+
         return $this;
     }
 }

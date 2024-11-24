@@ -1,73 +1,66 @@
 <?php
-
 namespace App\Entity;
 
 use App\Repository\UsercommissionRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UsercommissionRepository::class)]
+#[ORM\UniqueConstraint(columns: ['user_id', 'commission_id'])]
 class Usercommission
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'usercommissions')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?user $user = null;
+    private ?User $user = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(targetEntity: Commission::class, inversedBy: 'usercommissions')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?commission $commission = null;
+    private ?Commission $commission = null;
 
-    #[ORM\Column(type: "boolean", options: ["default" => false])]
-    private $isFollowed = false;
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $isFollowed = false;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId(int $id): static
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    public function getUser(): ?user
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(user $user): static
+    public function setUser(?User $user): self
     {
         $this->user = $user;
 
         return $this;
     }
 
-    public function getCommission(): ?commission
+    public function getCommission(): ?Commission
     {
         return $this->commission;
     }
 
-    public function setCommission(commission $commission): static
+    public function setCommission(?Commission $commission): self
     {
         $this->commission = $commission;
 
         return $this;
     }
 
-    public function getIsFollowed(): ?bool
+    public function isFollowed(): bool
     {
         return $this->isFollowed;
     }
 
-    public function setIsFollowed(?bool $isFollowed): self
+    public function setIsFollowed(bool $isFollowed): self
     {
-        $this->isClosed = $isFollowed;
+        $this->isFollowed = $isFollowed;
 
         return $this;
     }

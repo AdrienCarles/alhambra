@@ -31,16 +31,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: "json")]
     private array $roles = ['ROLE_USER'];
 
-    #[ORM\ManyToMany(targetEntity: Commission::class, inversedBy: 'users')]
-    private Collection $commissions;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Usercommission::class)]
+    private Collection $usercommissions;
 
-    #[OneToMany(mappedBy: "user", targetEntity: "App\Entity\Post")]
-    private $posts;
+    #[ORM\OneToMany(targetEntity: "App\Entity\Notification", mappedBy: "user")]
+    private $notifications;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Post::class)]
+    private Collection $posts;
 
     public function __construct()
     {
-        $this->commissions = new ArrayCollection();
+        $this->usercommissions = new ArrayCollection();
         $this->posts = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -112,39 +116,41 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function setRoles(array $roles): self
     {
-        $validRoles = ['ROLE_USER', 'ROLE_ADMINISTRATEUR', 'ROLE_BENEVOLE'];
+        $validRoles = ['ROLE_USER', 'ROLE_ADMINISTRATEUR', 'ROLE_BENEVOLE', 'ROLE_PRIVILEGED_USER'];
         $this->roles = array_intersect($roles, $validRoles);
         
-        // Assurez-vous que ROLE_USER est toujours attribué
         if (!in_array('ROLE_USER', $this->roles)) {
             $this->roles[] = 'ROLE_USER';
         }
-
+    
         return $this;
     }
 
     /**
-     * @return Collection|Commission[]
+     * @return Collection|Usercommission[]
      */
-    public function getCommissions(): Collection
+    public function getUsercommissions(): Collection
     {
-        return $this->commissions;
+        return $this->usercommissions;
     }
 
-    public function addCommission(Commission $commission): self
+    public function addUsercommission(Usercommission $usercommission): self
     {
-        if (!$this->commissions->contains($commission)) {
-            $this->commissions[] = $commission;
-            $commission->addUser($this);
+        if (!$this->usercommissions->contains($usercommission)) {
+            $this->usercommissions[] = $usercommission;
+            $usercommission->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeCommission(Commission $commission): self
+    public function removeUsercommission(Usercommission $usercommission): self
     {
-        if ($this->commissions->removeElement($commission)) {
-            $commission->removeUser($this);
+        if ($this->usercommissions->removeElement($usercommission)) {
+            // set the owning side to null (unless already changed)
+            if ($usercommission->getUser() === $this) {
+                $usercommission->setUser(null);
+            }
         }
 
         return $this;
@@ -171,12 +177,41 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removePost(Post $post): self
     {
         if ($this->posts->removeElement($post)) {
-            // set the owning side to null (unless already changed)
             if ($post->getUser() === $this) {
                 $post->setUser(null);
             }
         }
     
+        return $this;
+    }
+
+       /**
+     * @return Collection|Notification[]
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): self
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications[] = $notification;
+            $notification->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): self
+    {
+        if ($this->notifications->removeElement($notification)) {
+            // set the owning side to null (unless already changed)
+            if ($notification->getUser() === $this) {
+                $notification->setUser(null);
+            }
+        }
+
         return $this;
     }
 

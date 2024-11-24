@@ -1,57 +1,30 @@
 <?php
-// src/Entity/Post.php
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\GeneratedValue;
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\ManyToOne;
-use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping as ORM;
 
-#[Entity(repositoryClass: "App\Repository\PostRepository")]
+#[ORM\Entity(repositoryClass: "App\Repository\PostRepository")]
 class Post
 {
-    #[Id, GeneratedValue, Column(type: "integer")]
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: "integer")]
     private $id;
 
-    #[Column(type: "string", length: 255, nullable: true)]
-    private $title;
-
-    #[Column(type: "text")]
+    #[ORM\Column(type: "text")]
     private $content;
 
-    #[Column(type: "datetime")]
-    private $createdAt;
-
-    #[ManyToOne(targetEntity: "App\Entity\User")]
-    #[JoinColumn(name: "user_id", referencedColumnName: "id")]
-    private $user;
-
-    #[ManyToOne(targetEntity: "App\Entity\Commission", inversedBy: "posts")]
-    #[JoinColumn(name: "commission_id", referencedColumnName: "id")]
+    #[ORM\ManyToOne(targetEntity: Commission::class, inversedBy: 'posts')]
+    #[ORM\JoinColumn(nullable: false)]
     private $commission;
 
-    public function __construct()
-    {
-        $this->createdAt = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
-    }
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'posts')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $user;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
-
-        return $this;
     }
 
     public function getContent(): ?string
@@ -66,14 +39,14 @@ class Post
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCommission(): ?Commission
     {
-        return $this->createdAt;
+        return $this->commission;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCommission(?Commission $commission): self
     {
-        $this->createdAt = $createdAt;
+        $this->commission = $commission;
 
         return $this;
     }
@@ -87,18 +60,6 @@ class Post
     {
         $this->user = $user;
 
-        return $this;
-    }
-
-    public function getCommission(): ?Commission
-    {
-        return $this->commission;
-    }
-    
-    public function setCommission(?Commission $commission): self
-    {
-        $this->commission = $commission;
-    
         return $this;
     }
 }
