@@ -17,24 +17,25 @@
         {% if commission.isClosed == true %}
             <h2 class="col-sm-5 d-flex justify-content-center align-items-center">Commission archivé</h2>
         {% endif %}
-        <div class="col-sm-2 justify-content-end">
-            <button type="button" class="btn btn-warning">Suivre</button>
-        </div>
     </div>
-    <div class="chat">
-        <div class="messages d-flex flex-column">
-            {% for post in commission.posts %}
-                <div class="message {% if app.user and post.user == app.user %}message-right{% else %}message-left{% endif %}">
-                    {{ post.content }}
+<div class="chat">
+    <div class="messages d-flex flex-column">
+        {% for post in commission.posts %}
+            <div class="message {% if app.user and post.user == app.user %}message-right{% else %}message-left{% endif %}">
+                {{ post.content }}
+                <div class="message-user small text-muted">
+                    {{ post.user.name }}
                 </div>
-            {% endfor %}
-        </div>
-        <div class="message-input">
-            <form action="{{ path('post_create') }}" method="post" class="d-flex w-100">
-                <input type="hidden" name="commission_id" value="{{ commission.id }}">
-                <input type="text" placeholder="Message" name="post_content" required class="message-input-field" {{ commission.isClosed == true ? 'disabled' : ''  }}>
-                <button type="submit" class="send-button" {{ commission.isClosed == true ? 'disabled' : ''  }}>Envoyer</button>  
-            </form>        
-        </div>
+            </div>
+        {% endfor %}
     </div>
+    <div class="message-input">
+        <form action="{{ path('post_create') }}" method="post" class="d-flex w-100">
+            <input type="hidden" name="commission_id" value="{{ commission.id }}">
+            <input type="text" placeholder="Message" name="post_content" required class="message-input-field" {{ commission.isClosed == true ? 'disabled' : ''  }}>
+            <button type="submit" class="send-button" {{ commission.isClosed == true ? 'disabled' : ''  }}>Envoyer</button>  
+        </form>        
+    </div>
+</div>
+
 {% endblock %}

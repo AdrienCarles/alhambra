@@ -20,22 +20,4 @@ class UsercommissionController extends AbstractController
     {
         $this->entityManager = $entityManager;
     }
-
-    public function follow(Request $request,CommissionRepository $groupRepository, $idCommission): Response
-    {
-        $commission = $groupRepository->find($idCommission);
-        $Usercommission = new Usercommission();
-        $form = $this->createForm(UserCommissionType::class, $Usercommission);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->persist($Usercommission);
-            $this->entityManager->flush();
-            $this->addFlash('success', 'Groupe suivi'); 
-            return $this->redirectToRoute('commission/chat.html.twig');
-        }
-        return $this->render('commission/chat.html.twig', [
-            'commission' => $commission,
-            'currentCommissionId' => $id,
-        ]);
-    }
 }

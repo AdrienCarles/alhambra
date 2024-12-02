@@ -24,6 +24,9 @@ class Usercommission
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $isFollowed = false;
 
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $lastVisit;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -62,6 +65,17 @@ class Usercommission
     {
         $this->isFollowed = $isFollowed;
 
+        return $this;
+    }
+
+    public function getLastVisit(): ?\DateTimeInterface
+    {
+        return $this->lastVisit;
+    }
+
+    public function setLastVisit(?\DateTimeInterface $lastVisit): self
+    {
+        $this->lastVisit = $lastVisit;
         return $this;
     }
 }

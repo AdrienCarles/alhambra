@@ -20,8 +20,13 @@ class PostController extends AbstractController
             throw new AccessDeniedException('User not found.');
         }
 
-        // Créer le message
-        $content = $request->request->get('post_content');
+        // Créer le post
+        $post = new Post();
+        $post->setContent($request->request->get('post_content'));
+        $post->setUser($user);
+        $post->setCreatedAt(new \DateTime());
+
+        // Associer le post à la commission
         $commissionId = $request->request->get('commission_id');
         $message = new PostMessage($content, $user->getId(), $commissionId);
 

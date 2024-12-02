@@ -1,5 +1,5 @@
 {% extends 'card.html.twig' %}
-{% block title %}Mes commissions{% endblock %}
+{% block title %}Liste des commission{% endblock %}
 {% block card_content %}
     <ul class="list-group">
         {% for group in groups %}
@@ -11,14 +11,16 @@
                     {% endif %}
                 </div>
                 <div class="btn-group">
-                    {% if is_granted('ROLE_ADMINISTRATEUR') or is_granted('ROLE_PRIVILEGED_USER') %}
+                    {% if is_granted('ROLE_ADMINISTRATEUR') or is_granted('ROLE_BENEVOLE') %}
                         <a href="{{ path('commission_edit', {'id': group.id}) }}" class="btn btn-outline-warning btn-sm m-2 rounded">Modifier</a>
-                    {% endif %}
+                     {% endif %}
                     <a href="{{ path('commission_chat', {'id': group.id}) }}" class="btn btn-outline-success btn-sm m-2 rounded">Voir les messages</a>
                 </div>
-            </li>
+        </li>
         {% else %}
             <li class="list-group-item">No groups found</li>
         {% endfor %}
     </ul>
+
 {% endblock %}
+

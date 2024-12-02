@@ -14,25 +14,11 @@
 
     <div class="row mt-4">
         <div class="col-12">
-            <h2>Commissions de Flux Global</h2>
-            <div class="row">
-                {% for commission in globalCommissions %}
-                    <div class="col-4 col-md-3 mb-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    {{ commission.name }}
-                                    <i class="fas fa-bell"></i>
-                                </h5>
-                                <a href="{{ path('commission_chat', {'id': commission.id}) }}" class="btn btn-outline-success rounded">Messages</a>
-                            </div>
-                        </div>
-                    </div>
-                {% else %}
-                    <div class="col-12">
-                        <p>Aucune commission de flux global trouvée.</p>
-                    </div>
-                {% endfor %}
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h5 mb-0">Commission</h2>
+                {% if is_granted('ROLE_ADMINISTRATEUR') or is_granted('ROLE_BENEVOLE') %}
+                    <a href="/commission/new" class="btn btn-primary">Ajouter une commission</a>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -44,12 +30,30 @@
                 {% for commission in temporaryCommissions %}
                     <div class="col-6 col-md-4 mb-4">
                         <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    {{ commission.name }}
-                                    <i class="fas fa-bell"></i>
-                                </h5>
-                                <a href="{{ path('commission_chat', {'id': commission.id}) }}" class="btn btn-outline-success rounded">Messages</a>
+                            <div class="card-body d-flex justify-content-between align-items-center">
+                                <h5 class="card-title">{{ commission.name }}</h5>
+
+                                <div class="d-flex align-items-center">
+                                    {% set is_followed = subscriptions[commission.id] ?? false %}
+
+                                    {% if is_followed %}
+                                        <span class="badge bg-info me-2 notification-badge"
+                                              data-id="{{ commission.id }}">
+                                            {{ unreadMessages[commission.id] ?? 0 }} non lus
+                                        </span>
+                                    {% endif %}
+
+                                    <a href="#" 
+                                       class="toggle-subscription {{ is_followed ? 'text-warning' : 'text-muted' }}" 
+                                       data-id="{{ commission.id }}"
+                                       title="{{ is_followed ? 'Se désabonner' : 'S\'abonner' }}">
+                                        <i class="{{ is_followed ? 'fas fa-bell' : 'far fa-bell' }}"></i>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="card-footer text-center">
+                                <a href="{{ path('commission_chat', {'id': commission.id}) }}" class="btn btn-outline-success btn-sm m-2 rounded w-100">Chat</a>
                             </div>
                         </div>
                     </div>
@@ -62,4 +66,75 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const subscriptionLinks = document.querySelectorAll('.toggle-subscription');
+    
+    subscriptionLinks.forEach(link => {
+        link.addEventListener('click', (event) => {
+            event.preventDefault(); // Empêche la redirection
+            const commissionId = link.getAttribute('data-id');
+
+            fetch(`/commission/${commissionId}/toggle-subscription`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    // Met à jour la classe et l'icône de la cloche
+                    link.classList.toggle('text-warning', data.isFollowed);
+                    link.classList.toggle('text-muted', !data.isFollowed);
+
+                    const icon = link.querySelector('i');
+                    icon.classList.toggle('fas', data.isFollowed);
+                    icon.classList.toggle('far', !data.isFollowed);
+                }
+            })
+            .catch(error => console.error('Erreur:', error));
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    function fetchNotifications() {
+        fetch('/home/fetch-notifications', {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.notifications) {
+                const badges = document.querySelectorAll('.notification-badge');
+                badges.forEach(badge => {
+                    const commissionId = badge.getAttribute('data-id');
+                    const count = data.notifications[commissionId] || 0;
+                    badge.textContent = count + ' non lus';
+
+                    // Cacher le badge si aucune notification
+                    if (count === 0) {
+                        badge.style.display = 'none';
+                    } else {
+                        badge.style.display = 'inline-block';
+                    }
+                });
+            }
+        })
+        .catch(error => console.error('Erreur lors de la récupération des notifications:', error));
+    }
+
+    // Mise à jour toutes les 5 secondes
+    setInterval(fetchNotifications, 5000);
+});
+</script>
 {% endblock %}
