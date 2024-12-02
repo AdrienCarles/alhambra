@@ -1,41 +1,46 @@
 {% extends 'card.html.twig' %}
 {% block title %}
-
     {{ commission.name }}
-
 {% endblock %}
-
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('build/chat.css') }}">
+    {# <link rel="stylesheet" href="{{ asset('build/chat.css') }}"> #}
 {% endblock %}
 
 {% block card_content %}
-    <div class="row text-center justify-content-between py-1 m-2 align-content-between flex-wrap">
-        <div class="col-sm-3 d-flex justify-content-start align-items-center">{{commission.description}}</div>
-        {% if commission.isClosed == true %}
-            <h2 class="col-sm-5 d-flex justify-content-center align-items-center">Commission archivé</h2>
-        {% endif %}
-    </div>
-<div class="chat">
-    <div class="messages d-flex flex-column">
-        {% for post in commission.posts %}
-            <div class="message {% if app.user and post.user == app.user %}message-right{% else %}message-left{% endif %}">
-                {{ post.content }}
-                <div class="message-user small text-muted">
-                    {{ post.user.name }}
+<div class="d-flex flex-column vh-100">
+    <div class="flex-grow-1 mt-5 d-flex flex-column">
+        <div class="container-fluid d-flex flex-column h-100">
+            <div class="card chat flex-grow-1 d-flex flex-column overflow-hidden" style="height: calc(100vh - 56px);">
+                <!-- Messages -->
+                <div class="card-body flex-grow-1 overflow-auto">
+                    {% for post in commission.posts %}
+                        <div class="d-flex mb-3 {% if app.user and post.user == app.user %}justify-content-end{% else %}justify-content-start{% endif %}">
+                            <div class="message p-3 rounded {% if app.user and post.user == app.user %}bg-success text-white{% else %}bg-light{% endif %}">
+                                {{ post.content }}
+                                <div class="small text-muted mt-2">
+                                    {{ post.user.name }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Message input -->
+                <div class="card-footer">
+                    <form action="{{ path('post_create') }}" method="post" class="d-flex">
+                        <input type="hidden" name="commission_id" value="{{ commission.id }}">
+                        <input type="text" class="form-control me-2" name="post_content" placeholder="Message" 
+                            {% if commission.isClosed %}disabled{% endif %} required>
+                        <button type="submit" class="btn btn-success" {% if commission.isClosed %}disabled{% endif %}>
+                            Envoyer
+                        </button>
+                    </form>
                 </div>
             </div>
-        {% endfor %}
-    </div>
-    <div class="message-input">
-        <form action="{{ path('post_create') }}" method="post" class="d-flex w-100">
-            <input type="hidden" name="commission_id" value="{{ commission.id }}">
-            <input type="text" placeholder="Message" name="post_content" required class="message-input-field" {{ commission.isClosed == true ? 'disabled' : ''  }}>
-            <button type="submit" class="send-button" {{ commission.isClosed == true ? 'disabled' : ''  }}>Envoyer</button>  
-        </form>        
+        </div>
     </div>
 </div>
-
 {% endblock %}
+
