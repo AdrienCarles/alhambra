@@ -5,9 +5,11 @@
 {% block card_content %}
     {{ form_errors(userForm) }}
     {{ form_start(userForm, {'attr': {'class': 'form-horizontal'}}) }}
+
         <div class="mb-3">
             {{ form_row(userForm.email, {'attr': {'class': 'form-control', 'placeholder': 'Email'}}) }}
         </div>
+
         <div class="mb-3">
             {{ form_row(userForm.name, {
                 'label': 'Nom',
@@ -15,6 +17,7 @@
                 }) 
             }}
         </div>
+
         {% if is_granted('ROLE_ADMINISTRATEUR') %}
             <div class="mb-3">
                 <label for="user_roles" class="form-label">Rôles</label>
@@ -27,7 +30,9 @@
                     <label class="form-check-label" for="user_roles_1">Bénévole</label>
                 </div>
             </div>
-        
+        {% endif %}
+
+        {% if userForm.plainPassword is defined %}
             <div class="mb-3">
                 {{ form_row(userForm.plainPassword.first, {
                     'label': 'Nouveau mot de passe',
@@ -41,6 +46,7 @@
                 }) }}
             </div>
         {% endif %}
+
         <div class="row mb-3">
             <div class="col">
                 <button type="submit" class="btn btn-lg btn-primary w-100">Enregistrer</button>
@@ -49,5 +55,6 @@
                 <button type="button" class="btn btn-lg btn-secondary w-100" onclick="window.history.back()">Annuler</button>
             </div>
         </div>
+
     {{ form_end(userForm) }}
 {% endblock %}

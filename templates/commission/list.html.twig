@@ -1,80 +1,21 @@
 {% extends 'card.html.twig' %}
-{% block title %}Mes commission{% endblock %}
+{% block title %}Liste des commission{% endblock %}
 {% block card_content %}
     <ul class="list-group">
         {% for group in groups %}
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 <div class="me-auto">{{ group.name }} ({{ group.description }})</div>
                 <div class="btn-group">
-                    <a href="{{ path('commission_edit', {'id': group.id}) }}" class="btn btn-outline-warning btn-sm m-2 rounded">Modifier</a>
-
-                    <button type="button" 
-                            class="btn btn-outline-danger btn-sm m-2 rounded" 
-                            data-bs-toggle="toast" 
-                            data-bs-target="#confirmDeleteToast"
-                            data-bs-group-name="{{ group.name }}"
-                            data-bs-group-id="{{ group.id }}">
-                        Supprimer
-                    </button>
-
-                <a href="{{ path('commission_chat', {'id': group.id}) }}" class="btn btn-outline-success btn-sm m-2 rounded">Voir les messages</a>
-            </div>
+                    {% if is_granted('ROLE_ADMINISTRATEUR') or is_granted('ROLE_BENEVOLE') %}
+                        <a href="{{ path('commission_edit', {'id': group.id}) }}" class="btn btn-outline-warning btn-sm m-2 rounded">Modifier</a>
+                     {% endif %}
+                    <a href="{{ path('commission_chat', {'id': group.id}) }}" class="btn btn-outline-success btn-sm m-2 rounded">Voir les messages</a>
+                </div>
         </li>
         {% else %}
             <li class="list-group-item">No groups found</li>
         {% endfor %}
     </ul>
-
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <div id="confirmDeleteToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header bg-danger text-white">
-                <strong class="me-auto">Confirmation de suppression</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-            <div class="toast-body">
-                Voulez-vous vraiment supprimer le groupe "<span id="toastGroupName"></span>" ?
-                <div class="mt-2 pt-2 border-top">
-                    <form method="post" id="confirmDeleteForm">
-                        {% for group in groups %}
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ group.id) }}">
-                        {% endfor %}
-                        <input type="hidden" name="groupId" id="toastGroupId">
-                        <button type="submit" class="btn btn-danger">Supprimer</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="toast">Annuler</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-        // Initialize all toasts
-        var toastElList = [].slice.call(document.querySelectorAll('.toast'));
-        var toastList = toastElList.map(function(toastEl) {
-            return new Toast(toastEl, {
-            autohide: false // Prevent auto-hiding of the toast
-            });
-        });
-
-        // Add event listeners to all delete buttons
-        document.querySelectorAll('[data-bs-toggle="toast"]').forEach(button => {
-            button.addEventListener('click', function () {
-            const toast = new Toast(document.getElementById('confirmDeleteToast'));
-            const groupName = this.dataset.bsGroupName;
-            const groupId = this.dataset.bsGroupId;
-            const deleteUrl = "{{ path('commission_delete', {'id': '__groupId__'}) }}".replace('__groupId__', groupId);
-
-            // Update toast content
-            document.getElementById('toastGroupName').textContent = groupName;
-            document.getElementById('confirmDeleteForm').action = deleteUrl;
-
-            // Show toast
-            toast.show();
-            });
-        });
-        });
-    </script>
 
 {% endblock %}
 

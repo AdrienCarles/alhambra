@@ -52,13 +52,19 @@ class UserController extends AbstractController
     {
         $form = $this->createForm(UserEditType::class, $user);
         $form->handleRequest($request);
+
+        $currentUser = $this->getUser();
     
         if ($form->isSubmitted() && $form->isValid()) {
-            $plainPassword = $form->get('plainPassword')->get('first')->getData();
-            if (!empty($plainPassword)) {
-                // Encodez et définissez le nouveau mot de passe
-                $encodedPassword = $passwordHasher->hashPassword($user, $plainPassword);
-                $user->setPassword($encodedPassword);
+
+                    // Si l'utilisateur connecté modifie son propre profil
+            if ($currentUser->getId() === $user->getId()) {
+                $plainPassword = $form->get('plainPassword')->get('first')->getData();
+                if (!empty($plainPassword)) {
+                    // Encodez et définissez le nouveau mot de passe
+                    $encodedPassword = $passwordHasher->hashPassword($user, $plainPassword);
+                    $user->setPassword($encodedPassword);
+                }
             }
 
             // Persister les modifications

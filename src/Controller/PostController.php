@@ -28,8 +28,8 @@ class PostController extends AbstractController
         // Créer le post
         $post = new Post();
         $post->setContent($request->request->get('post_content'));
-
         $post->setUser($user);
+        $post->setCreatedAt(new \DateTime());
 
         // Associer le post à la commission
         $commissionId = $request->request->get('commission_id');

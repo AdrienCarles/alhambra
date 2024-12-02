@@ -1,5 +1,4 @@
 <?php
-// src/Form/UserEditType.php
 namespace App\Form;
 
 use App\Entity\User;
@@ -19,7 +18,6 @@ class UserEditType extends AbstractType
 {
     private $security;
 
-    // Le constructeur accepte le service Security
     public function __construct(Security $security)
     {
         $this->security = $security;
@@ -31,7 +29,13 @@ class UserEditType extends AbstractType
             ->add('email', EmailType::class)
             ->add('name', TextType::class);
 
-        // Utilisation du service Security
+        // Récupérer l'utilisateur connecté
+        $currentUser = $this->security->getUser();
+
+        // Vérifier si l'utilisateur connecté est le même que l'utilisateur du formulaire
+        $formUser = $options['data']; // L'entité User liée au formulaire
+
+        // Ajouter le champ des rôles si l'utilisateur a le rôle ROLE_ADMINISTRATEUR
         if ($this->security->isGranted('ROLE_ADMINISTRATEUR')) {
             $builder->add('roles', ChoiceType::class, [
                 'choices' => [
@@ -42,23 +46,25 @@ class UserEditType extends AbstractType
                 'expanded' => true,
                 'required' => false,
             ]);
-        
+        }
 
+        // Ajouter le champ de modification de mot de passe uniquement pour l'utilisateur connecté
+        if ($currentUser && $formUser && $currentUser->getId() === $formUser->getId()) {
             $builder->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'first_options' => [
                     'label' => 'Nouveau mot de passe',
-                    'attr' => ['class' => 'form-control', 'placeholder' => 'Nouveau mot de passe', 'required' => false],
+                    'attr' => ['class' => 'form-control', 'placeholder' => 'Nouveau mot de passe'],
                 ],
                 'second_options' => [
                     'label' => 'Confirmez le nouveau mot de passe',
-                    'attr' => ['class' => 'form-control', 'placeholder' => 'Confirmez le nouveau mot de passe', 'required' => false],
+                    'attr' => ['class' => 'form-control', 'placeholder' => 'Confirmez le nouveau mot de passe'],
                 ],
-                'required' => false,
-                'mapped' => false,
+                'required' => false, // Champ optionnel
+                'mapped' => false,  // Pas directement lié à l'entité User
                 'constraints' => [
                     new Callback([
-                        'callback' => function($object, ExecutionContextInterface $context, $payload) {
+                        'callback' => function ($object, ExecutionContextInterface $context, $payload) {
                             if (!empty($object['first']) || !empty($object['second'])) {
                                 if ($object['first'] !== $object['second']) {
                                     $context->buildViolation('Les mots de passe doivent correspondre.')

@@ -16,6 +16,11 @@ app_home:
     path: /home
     controller: App\Controller\HomeController::index
 
+home_fetch_notifications:
+    path: /home/fetch-notifications
+    controller: App\Controller\HomeController::fetchNotifications
+    methods: [GET]
+
 # Route SecurityController
 app_login:
     path: /login
@@ -80,6 +85,21 @@ commission_delete:
 commission_chat:
     path: /commission/chat/{id}
     controller: App\Controller\CommissionController::chat
+
+commission_subscribe:
+    path: /commission/{id}/subscribe
+    controller: App\Controller\CommissionController::subscribe
+    methods: [GET]
+
+commission_unsubscribe:
+    path: /commission/{id}/unsubscribe
+    controller: App\Controller\CommissionController::unsubscribe
+    methods: [GET]
+
+commission_toggle_subscription:
+    path: /commission/{id}/toggle-subscription
+    controller: App\Controller\CommissionController::toggleSubscription
+    methods: [POST]
 
 # Route PostController
 post_create:

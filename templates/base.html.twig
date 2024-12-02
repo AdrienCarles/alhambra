@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
@@ -24,7 +25,7 @@
                                 Utilisateurs
                             </button>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                {% if is_granted('ROLE_ADMINISTRATEUR') or is_granted('ROLE_BENEVOLE') %}
+                                {% if is_granted('ROLE_ADMINISTRATEUR') %}
                                     <a class="dropdown-item" href="/user/list">Liste</a>
                                 {% endif %}
                                 <a class="dropdown-item" href="{{ path('user_detail', {'id': app.user.id}) }}">Mon Compte</a>
@@ -35,7 +36,9 @@
                                 Commissions
                             </button>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="/commission/new">Nouveau</a>
+                                {% if is_granted('ROLE_ADMINISTRATEUR') or is_granted('ROLE_BENEVOLE') %}
+                                    <a class="dropdown-item" href="/commission/new">Nouveau</a>
+                                {% endif %}
                                 <a class="dropdown-item" href="/commission/list">Liste</a>
                             </div>
                         </li>
@@ -48,8 +51,7 @@
         {% endif %}
     </head>
     <body>
-        {% block body %}
-
-        {% endblock %}
+        {% block body %}{% endblock %}
+        {% block extra_js %}{% endblock %}
     </body>
 </html>
