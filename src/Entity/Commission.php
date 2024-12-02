@@ -25,9 +25,13 @@ class Commission
     #[ORM\OneToMany(mappedBy: 'commission', targetEntity: Usercommission::class)]
     private Collection $usercommissions;
 
+    #[ORM\OneToMany(mappedBy: 'commission', targetEntity: Post::class)]
+    private Collection $posts;
+
     public function __construct()
     {
         $this->usercommissions = new ArrayCollection();
+        $this->posts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -64,6 +68,13 @@ class Commission
         return $this->isClosed;
     }
 
+    public function setIsClosed(bool $isClosed): self
+    {
+        $this->isClosed = $isClosed;
+
+        return $this;
+    }
+
     /**
      * @return Collection|Usercommission[]
      */
@@ -94,4 +105,33 @@ class Commission
         return $this;
     }
 
+    /**
+     * @return Collection|Post[]
+     */
+    public function getPosts(): Collection
+    {
+        return $this->posts;
+    }
+
+    public function addPost(Post $post): self
+    {
+        if (!$this->posts->contains($post)) {
+            $this->posts[] = $post;
+            $post->setCommission($this);
+        }
+
+        return $this;
+    }
+
+    public function removePost(Post $post): self
+    {
+        if ($this->posts->removeElement($post)) {
+            // set the owning side to null (unless already changed)
+            if ($post->getCommission() === $this) {
+                $post->setCommission(null);
+            }
+        }
+
+        return $this;
+    }
 }
