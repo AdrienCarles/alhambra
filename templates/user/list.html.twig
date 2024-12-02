@@ -3,21 +3,36 @@
 {% block title %}Liste des utilisateurs{% endblock %}
 
 {% block card_content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Liste des utilisateurs</h3>
+        <a href="/register" class="btn btn-primary">Ajouter un utilisateur</a>
+    </div>
     <ul class="list-group">
-        <a href="/register">Ajouter</a>
         {% for user in users %}
             <li class="list-group-item">
-                <a href="{{ path('user_detail', {'id': user.id}) }}" class="text-decoration-none text-dark">
-                    {{ user.name }} ({{ user.email }}) 
-                    {% for role in user.roles %}
-                        {% if role != 'ROLE_USER' %}
-                           - {{ role|replace({'ROLE_': ''}) }}
-                        {% endif %}
-                    {% endfor %}
-                </a>
+                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center">
+                    <!-- User Details -->
+                    <div>
+                        <strong>{{ user.name }}</strong>
+                        <span class="text-muted d-none d-lg-inline">({{ user.email }})</span> {# Visible uniquement sur écrans large ou plus grands #}
+                        {% for role in user.roles %}
+                            {% if role != 'ROLE_USER' %}
+                                <span class="badge bg-info ms-2">{{ role|replace({'ROLE_': ''}) }}</span>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <!-- Actions (placées en dessous sur mobile, à droite sur écrans moyens ou plus grands) -->
+                    <div class="btn-group mt-2 mt-sm-0">
+                        <a href="{{ path('user_detail', {'id': user.id}) }}" class="btn btn-outline-primary btn-sm">Détails</a>
+                        <a href="{{ path('user_edit', {'id': user.id}) }}" class="btn btn-outline-warning btn-sm">Modifier</a>
+                    </div>
+                </div>
             </li>
         {% else %}
-            <li class="list-group-item">No users found</li>
+            <li class="list-group-item">Aucun utilisateur trouvé</li>
         {% endfor %}
     </ul>
+</div>
 {% endblock %}

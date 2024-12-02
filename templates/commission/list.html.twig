@@ -1,26 +1,26 @@
 {% extends 'card.html.twig' %}
-{% block title %}Liste des commission{% endblock %}
+{% block title %}Liste des commissions{% endblock %}
 {% block card_content %}
-    <ul class="list-group">
-        {% for group in groups %}
-            <li class="list-group-item d-flex justify-content-between align-items-center {% if group.isClosed %}list-group-item-warning{% endif %}">
-                <div class="me-auto">
-                    {{ group.name }} ({{ group.description }})
-                    {% if group.isClosed %}
-                        <span class="badge bg-warning">Archivée</span>
-                    {% endif %}
-                </div>
-                <div class="btn-group">
-                    {% if is_granted('ROLE_ADMINISTRATEUR') or is_granted('ROLE_BENEVOLE') %}
-                        <a href="{{ path('commission_edit', {'id': group.id}) }}" class="btn btn-outline-warning btn-sm m-2 rounded">Modifier</a>
-                     {% endif %}
-                    <a href="{{ path('commission_chat', {'id': group.id}) }}" class="btn btn-outline-success btn-sm m-2 rounded">Voir les messages</a>
-                </div>
-        </li>
-        {% else %}
-            <li class="list-group-item">No groups found</li>
-        {% endfor %}
-    </ul>
-
+    <div class="container">
+        <ul class="list-group">
+            {% for group in groups %}
+                <li class="list-group-item d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center {% if group.isClosed %}list-group-item-warning{% endif %}">
+                    <div class="me-auto">
+                        <strong>{{ group.name }}</strong> <span class="text-muted">({{ group.description }})</span>
+                        {% if group.isClosed %}
+                            <span class="badge bg-warning ms-2">Archivée</span>
+                        {% endif %}
+                    </div>
+                    <div class="btn-group mt-2 mt-md-0">
+                        {% if is_granted('ROLE_ADMINISTRATEUR') or is_granted('ROLE_BENEVOLE') %}
+                            <a href="{{ path('commission_edit', {'id': group.id}) }}" class="btn btn-outline-warning btn-sm m-1">Modifier</a>
+                        {% endif %}
+                        <a href="{{ path('commission_chat', {'id': group.id}) }}" class="btn btn-outline-success btn-sm m-1">Chat</a>
+                    </div>
+                </li>
+            {% else %}
+                <li class="list-group-item">Aucune commission trouvée</li>
+            {% endfor %}
+        </ul>
+    </div>
 {% endblock %}
-

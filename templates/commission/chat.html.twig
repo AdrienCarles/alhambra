@@ -1,46 +1,49 @@
-{% extends 'card.html.twig' %}
-{% block title %}
-    {{ commission.name }}
-{% endblock %}
+{% extends 'base.html.twig' %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    {# <link rel="stylesheet" href="{{ asset('build/chat.css') }}"> #}
-{% endblock %}
+{% block body %}
+<div class="d-flex flex-column" style="height: calc(100vh - 56px); margin-top: 56px; padding-bottom: 10px;">
+    <!-- Card unique -->
+    <div class="card flex-grow-1 d-flex flex-column overflow-hidden">
+        <!-- Header (titre de la card) -->
+        <div class="card-header">
+            <h1 class="text-center">{% block title %}{{ commission.name }}{% endblock %}</h1>
+        </div>
 
-{% block card_content %}
-<div class="d-flex flex-column vh-100">
-    <div class="flex-grow-1 mt-5 d-flex flex-column">
-        <div class="container-fluid d-flex flex-column h-100">
-            <div class="card chat flex-grow-1 d-flex flex-column overflow-hidden" style="height: calc(100vh - 56px);">
-                <!-- Messages -->
-                <div class="card-body flex-grow-1 overflow-auto">
-                    {% for post in commission.posts %}
-                        <div class="d-flex mb-3 {% if app.user and post.user == app.user %}justify-content-end{% else %}justify-content-start{% endif %}">
-                            <div class="message p-3 rounded {% if app.user and post.user == app.user %}bg-success text-white{% else %}bg-light{% endif %}">
-                                {{ post.content }}
-                                <div class="small text-muted mt-2">
-                                    {{ post.user.name }}
-                                </div>
-                            </div>
+        <!-- Messages (scrollable) -->
+        <div id="message-container" class="card-body flex-grow-1 overflow-auto">
+            {% for post in commission.posts %}
+                <div class="d-flex mb-3 {% if app.user and post.user == app.user %}justify-content-end{% else %}justify-content-start{% endif %}">
+                    <div class="message p-3 rounded {% if app.user and post.user == app.user %}bg-success text-white{% else %}bg-light{% endif %}">
+                        {{ post.content }}
+                        <div class="small text-muted mt-2">
+                            {{ post.user.name }}
                         </div>
-                    {% endfor %}
+                    </div>
                 </div>
+            {% endfor %}
+        </div>
 
-                <!-- Message input -->
-                <div class="card-footer">
-                    <form action="{{ path('post_create') }}" method="post" class="d-flex">
-                        <input type="hidden" name="commission_id" value="{{ commission.id }}">
-                        <input type="text" class="form-control me-2" name="post_content" placeholder="Message" 
-                            {% if commission.isClosed %}disabled{% endif %} required>
-                        <button type="submit" class="btn btn-success" {% if commission.isClosed %}disabled{% endif %}>
-                            Envoyer
-                        </button>
-                    </form>
-                </div>
-            </div>
+        <!-- Footer (input toujours visible) -->
+        <div class="card-footer" style="margin-bottom: 10px;">
+            <form action="{{ path('post_create') }}" method="post" class="d-flex">
+                <input type="hidden" name="commission_id" value="{{ commission.id }}">
+                <input type="text" class="form-control me-2" name="post_content" placeholder="Message" 
+                    {% if commission.isClosed %}disabled{% endif %} required>
+                <button type="submit" class="btn btn-success" {% if commission.isClosed %}disabled{% endif %}>
+                    Envoyer
+                </button>
+            </form>
         </div>
     </div>
 </div>
 {% endblock %}
 
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const messageContainer = document.getElementById('message-container');
+        messageContainer.scrollTop = messageContainer.scrollHeight; // Scroll en bas des messages
+    });
+</script>
+{% endblock %}
