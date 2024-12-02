@@ -79,8 +79,6 @@ class CommissionController extends AbstractController
             'currentCommissionId' => $id,
         ]);
     }
-    
-    
 
     public function list(CommissionRepository $groupRepository): Response
     {

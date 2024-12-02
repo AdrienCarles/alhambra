@@ -22,9 +22,6 @@ class Commission
     #[ORM\Column(type: "boolean", options: ["default" => false])]
     private $isClosed = false;
 
-    #[ORM\Column(type: "boolean", options: ["default" => false])]
-    private $isGeneral = false;
-
     #[ORM\OneToMany(mappedBy: 'commission', targetEntity: Usercommission::class)]
     private Collection $usercommissions;
 
@@ -65,25 +62,6 @@ class Commission
     public function getIsClosed(): bool
     {
         return $this->isClosed;
-    }
-
-    public function setIsClosed(bool $isClosed): self
-    {
-        $this->isClosed = $isClosed;
-
-        return $this;
-    }
-
-    public function getIsGeneral(): bool
-    {
-        return $this->isGeneral;
-    }
-
-    public function setIsGeneral(bool $isGeneral): self
-    {
-        $this->isGeneral = $isGeneral;
-
-        return $this;
     }
 
     /**
