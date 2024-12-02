@@ -1,15 +1,20 @@
 <?php
+// src/Controller/PostController.php
 namespace App\Controller;
 
-use App\Message\PostMessage;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use App\Entity\Post;
+use App\Entity\Commission;
+use Doctrine\ORM\EntityManagerInterface;
 
 class PostController extends AbstractController
 {
-    public function create(Request $request, MessageBusInterface $bus): Response
+    public function create(Request $request, EntityManagerInterface $entityManager, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         // Vérifier l'authentification de l'utilisateur
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -28,10 +33,15 @@ class PostController extends AbstractController
 
         // Associer le post à la commission
         $commissionId = $request->request->get('commission_id');
-        $message = new PostMessage($content, $user->getId(), $commissionId);
+        $commission = $entityManager->getRepository(Commission::class)->find($commissionId);
+        if (!$commission) {
+            throw $this->createNotFoundException('Commission not found.');
+        }
+        $post->setCommission($commission);
 
-        // Envoyer le message
-        $bus->dispatch($message);
+        // Enregistrer le post
+        $entityManager->persist($post);
+        $entityManager->flush();
 
         // Rediriger vers la commission
         return $this->redirectToRoute('commission_chat', ['id' => $commissionId]);
