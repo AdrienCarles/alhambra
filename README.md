@@ -1,8 +1,4 @@
-Voici le texte formaté pour un README GitHub :
-
----
-
-# Alhambra Project
+# Alhambra
 
 Alhambra est une application Symfony destinée à la gestion des commissions, des utilisateurs et des notifications dans un cadre associatif.
 
