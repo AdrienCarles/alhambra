@@ -76,7 +76,7 @@ npm install
    php bin/console doctrine:migrations:migrate
    ```
 
-3. *(Facultatif)* Ajoutez des données de test :
+3. Ajoutez des données de initiales :
 
    ```bash
    php bin/console doctrine:fixtures:load
