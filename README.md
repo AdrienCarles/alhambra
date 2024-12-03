@@ -102,7 +102,7 @@ Utilisez Webpack Encore pour compiler les fichiers front-end :
 
 Démarrez le serveur Symfony :
 ```bash
-symfony serve
+symfony server:start
 ```
 
 L'application sera accessible à l'adresse suivante : [http://127.0.0.1:8000](http://127.0.0.1:8000)
